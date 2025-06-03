@@ -1,1 +1,1297 @@
-prueba
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gestor de Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        .title{
+            text-align: center;
+            font-size: 1em;
+            margin-bottom: 2px;
+            color: #4CAF50;
+        }
+        .question-container {
+            margin-bottom: 20px;
+            padding: 5px 20px 20px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .question-container:hover {
+            transform: scale(1.02);
+        }
+        label {
+            font-size: 1em;
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        label:hover {
+            background-color: #80deea;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        .feedback {
+            margin-top: 10px;
+            display: block;
+            font-size: 1.2em;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 1.4em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        .correcto {
+            background-color: #9c27b0;
+            color: white;
+        }
+        .incorrecto {
+            background-color: red;
+            color: white;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            margin-top: 5px;
+        }
+        .progress-bar div {
+            height: 20px;
+            background-color: #4CAF50;
+            width: 0;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        .progress-bar span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1em;
+            color: #333;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            label {
+                font-size: 1em;
+            }
+            button {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h4 class="title">1º Higiene Bucodental.</h4>
+    <!-- <label for="examSelector">Selecciona un examen:</label> -->
+    <select id="examSelector" aria-label="Seleccionar examen">
+        <option value="examen1">1ªEV. Aparato Circulatorio</option>
+        <option value="examen2" selected="selected">2ªEV. Fisiología</option>
+        <option value="examen3" >2ªEV. Sostenibilidad</option>
+
+    </select>
+    <button id="startQuiz" aria-label="Comenzar Test">Comenzar Test</button>
+    <div class="progress-bar">
+        <div id="progress" style="background-color:#9587e3"></div>
+        <span id="progressPercentage">0%</span>
+    </div>
+    <form id="quizForm" aria-live="polite">
+        <div id="questions"></div>
+    </form>
+    <div id="result" aria-live="polite"></div>
+
+    <script>
+        $(document).ready(function () {
+            let preguntaActual = 0;
+            let correctas = 0;
+            let preguntas = []; // Este array almacenará las preguntas del examen seleccionado
+
+            // Datos de los exámenes integrados en el código
+            const examenes = {
+                examen1: [
+                    {
+        pregunta: "¿Cuál de estos NO es un agente físico?",
+        opciones: [
+            "Temperatura",
+            "Electricidad",
+            "Fármacos",
+            "Traumatismos"
+        ],
+        correcta: 2 // Índice de la opción correcta
+    },
+    {
+        pregunta: "¿A qué término hace referencia: 'Es el juicio hipotético acerca de la terminación probable de una enfermedad'?",
+        opciones: [
+            "Diagnóstico",
+            "Pronóstico",
+            "Anamnesis",
+            "Anamnesis"
+        ],
+        correcta: 1
+    },
+    {
+        pregunta: "En la pared del corazón existen 3 capas, ¿Cuál es la más externa?",
+        opciones: [
+            "Pericardio",
+            "Endocardio",
+            "Miocardio",
+            "Venosa"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "En las etapas de la enfermedad, ¿en qué fase hay cambios celulares, tisulares u orgánicos sin que la persona manifieste aún ningún síntoma o signo?",
+        opciones: [
+            "Fase clínica",
+            "Fase pre-patogénica",
+            "Fase patogénica",
+            "Todas son correctas"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "La hipertensión arterial ocurre cuando la presión sanguínea es:",
+        opciones: [
+            "Alta",
+            "Normal",
+            "Baja",
+            "Ninguna es correcta"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "¿En cuál de estas enfermedades el sistema inmunitario ataca a las células del propio organismo?",
+        opciones: [
+            "SIDA",
+            "Neumonía",
+            "Lupus",
+            "Epilepsia",
+            "(opciones: autoinmune, genética, nutricional…)"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "¿Cuál de estos análisis no es clínico?",
+        opciones: [
+            "Inmunología",
+            "Microbiología",
+            "Bioquímica",
+            "Inspección"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Cuáles son los sistemas que están implicados en la actividad eléctrica del corazón?",
+        opciones: [
+            "Nódulo sinusal",
+            "Nódulo mitral",
+            "Nódulo auriculoventricular",
+            "a y c son correctas"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Cuáles son los procesos patológicos fundamentales?",
+        opciones: [
+            "Edema",
+            "Inflamación",
+            "Tumoración",
+            "Todas son correctas"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Qué es la fisioterapia?",
+        opciones: [
+            "Es ir al fisio",
+            "Es una disciplina cuyo objetivo es paliar un síntoma de muerte",
+            "Es una disciplina cuyo objetivo es hacer deporte",
+            "Es una disciplina cuyo objetivo es paliar síntomas de múltiples dolencias, tanto agudas como crónicas, por medio del ejercicio terapéutico, calor, frío, luz, agua, masaje y electricidad."
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Qué es necesario para reparar los tejidos lesionados?",
+        opciones: [
+            "Sangre",
+            "Parche",
+            "Proteínas",
+            "Cicatrización"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Qué son los agentes biológicos?",
+        opciones: [
+            "Son microorganismos capaces de provocar una infección",
+            "Son moléculas capaces de provocar una enfermedad",
+            "Son ácidos y bases con capacidad de provocar una enfermedad",
+            "Todas son correctas"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "¿Cuál de estos es un examen físico?",
+        opciones: [
+            "Elisa",
+            "Radiografía",
+            "Electro",
+            "Auscultación"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Cuál es la válvula que conecta el ventrículo y la aurícula derecha?",
+        opciones: [
+            "Mitral",
+            "Aórtica",
+            "Tricúspide",
+            "Pulmonar"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "¿Cómo se pueden denominar las características del agente según la causa esté en el propio material genético o no?",
+        opciones: [
+            "Intrínseca",
+            "Directa",
+            "De efecto inmediato",
+            "Genética y/o adquirida"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "Es el aumento del tamaño celular por aumento de la masa protoplasmática, con incremento de la función.",
+        opciones: [
+            "Atrofia",
+            "Hipertrofia",
+            "Metaplasia",
+            "Displasia"
+        ],
+        correcta: 1
+    },
+    {
+        pregunta: "Trastorno que persiste después de la curación",
+        opciones: [
+            "Complicación",
+            "Evolución",
+            "Secuela",
+            "Diagnóstico"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "Conjunto de procesos fisiológicos que tienen por objetivo detener una hemorragia.",
+        opciones: [
+            "Volemia",
+            "Retorno venoso",
+            "Tensión arterial",
+            "Hemostasia"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Cuánto dura una enfermedad crónica?",
+        opciones: [
+            "6 meses",
+            "Más de 6 meses",
+            "1 mes",
+            "Ninguna es correcta"
+        ],
+        correcta: 1
+    },
+    {
+        pregunta: "¿Qué es un edema?",
+        opciones: [
+            "Es acumulación de líquido en el espacio celular",
+            "No existe acumulación",
+            "Es una acumulación de líquido en el espacio intercelular o intersticial o en cavidades del organismo",
+            "Todas son correctas"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "¿Se debe a un aumento del número de las células que lo forman (relacionado con los tejidos)?",
+        opciones: [
+            "Hiperplasia o hipertrofia numérica.",
+            "Hipertrofia estricta.",
+            "Necrosis coagulativa.",
+            "Metaplasia"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "¿A qué término hace referencia: 'Es el tratamiento con medicamentos, dispensados a partir de recetas médicas'?",
+        opciones: [
+            "Sueroterapia",
+            "Radioterapia",
+            "Quimioterapia",
+            "Farmacología"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿A qué activa la trombina?",
+        opciones: [
+            "Vitamina K",
+            "Fibrinógeno",
+            "Fibrina",
+            "Protrombina"
+        ],
+        correcta: 1
+    },
+    {
+        pregunta: "¿Cómo se denomina la embolia, la cual ha sido causada por pus y bacterias?",
+        opciones: [
+            "Embolia aérea",
+            "Embolia tisular",
+            "Embolia séptica",
+            "Todas son correctas"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "¿Cómo afectan a la célula los agentes externos?",
+        opciones: [
+            "De forma fisiológica y si no se puede, de forma fisiopatológica",
+            "De forma patogénica y si no se puede, de forma fisiológica",
+            "Se multiplican solamente",
+            "Todas son incorrectas"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "¿Qué tipos de radiografías hay?",
+        opciones: [
+            "Con contraste",
+            "Simples",
+            "Derivadas",
+            "A y B son correctas"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "El circuito menor de la sangre",
+        opciones: [
+            "Se llama también sistémico y lleva la sangre desde el corazón hasta los pulmones",
+            "Se llama también pulmonar y lleva la sangre desde el corazón hasta el resto del organismo",
+            "Se llama también sistémico y lleva la sangre desde el corazón hasta el resto del organismo",
+            "Se llama también pulmonar y lleva la sangre desde el corazón hasta los pulmones"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "Síntomas de un accidente vascular cerebral.",
+        opciones: [
+            "Dificultad para expresarse",
+            "Pérdida de fuerza en pierna o brazo",
+            "Pérdida de visión",
+            "Todas son correctas"
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "Las lesiones celulares pueden ser:",
+        opciones: [
+            "Reversibles.",
+            "Ninguna es correcta",
+            "Irreversibles",
+            "a y c son correctas."
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "¿Cuál de estas son técnicas de electrodiagnóstico?",
+        opciones: [
+            "Electrocardiograma",
+            "Electroencefalograma y electromiografía.",
+            "Endoscopia, resonancia magnética y ecografía.",
+            "a y b son correctas."
+        ],
+        correcta: 3
+    },
+    {
+        pregunta: "Es el estudio de la dinámica de la sangre en el interior de los vasos",
+        opciones: [
+            "Retorno venoso.",
+            "Ciclo cardíaco.",
+            "Hemodinámica",
+            "Coágulos"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "Tipo de enfermedad que presenta longevidad en el tiempo y de carácter degenerativo.",
+        opciones: [
+            "Crónica",
+            "Genética",
+            "Autoinmune",
+            "Mental"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "¿Qué es la arritmia?",
+        opciones: [
+            "Alteraciones en una o varias válvulas del corazón",
+            "Síntomas compatibles con una cardiopatía isquémica",
+            "Presenta un pulso irregular",
+            "Presión sanguínea"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "¿Qué es la isquemia?",
+        opciones: [
+            "Formación de un coágulo",
+            "Dilatación de un vaso sanguíneo",
+            "Reducción de flujo sanguíneo",
+            "Dilatación venosa"
+        ],
+        correcta: 2
+    },
+    {
+        pregunta: "¿Qué es la fibrosis?",
+        opciones: [
+            "Tejido conectivo fibroso",
+            "Tejido cartilaginoso",
+            "Tejido óseo",
+            "Ninguna es correcta"
+        ],
+        correcta: 0
+    },
+    {
+        pregunta: "¿Qué es la nosología?",
+        opciones: [
+            "El estudio de los agentes etiológicos.",
+            "La descripción, diferenciación y clasificación de enfermedades",
+            "La prevención de enfermedades genéticas.",
+            "La investigación de agentes infecciosos"
+        ],
+        correcta: 1
+    },
+    {
+        pregunta: "¿Qué tipo de trombosis ocurre cuando el vaso queda completamente obstruido?",
+        opciones: [
+            "Trombosis mural.",
+            "Trombosis hialina.",
+            "Trombosis ocluyente.",
+            "Trombosis por precipitación."
+        ],
+        correcta: 2
+    }
+                ],
+                examen2: [
+                    {
+                        pregunta: "En las vías nasales superiores o altas están formados por:",
+                        opciones: [
+                            "Fosas nasales, faringe y laringe.",
+                            "Fosas nasales, traquea y laringe.",
+                            "Faringe, Laringe y Bronquios.",
+                            "Todas son correctas."
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "Sobre la Tráquea, señala la CORRECTA.",
+                        opciones: [
+                            "Conecta la faringe con la laringe.",
+                            "Conecta la laringe con los bronquios.",
+                            "Los cartílagos tienen forma de C para permitir la distensión del esófago durante la deglución.",
+                            "B y C son correctas"
+                        ],
+                        correcta: 4
+                    },
+                    {
+                        pregunta: "¿Que tipo de lípido NO aumenta el colesterol y protegen las arterias y venas?",
+                        opciones: [
+                            "Lípidos Saturados o grasas",
+                            "Lípidos complejos.",
+                            "Lípidos Polisacaridos",
+                            "Lípidos Monoinsaturados o aceites"
+                        ],
+                        correcta: 4
+                    },
+
+                    {
+                        pregunta: "¿Cuál de estas no es una función de la entrada del aire por las fosas nasales?",
+                        opciones: [
+                            "Conducción del aire",
+                            "Protección",
+                            "Respiración celular",
+                            "Ninguna de las anteriores lo es"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "Sobre los volúmenes respiratorios ¿cuál es aquel que no se puede exhalar?",
+                        opciones: [
+                            "Volumen corriente",
+                            "Volumen residual",
+                            "Volumen de reserva inspiratorio",
+                            "Volumen de reserva espiratorio"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "Las vitaminas hidrosolubles son…",
+                        opciones: [
+                            "Las que no se almacenan en el organismo",
+                            "Las vitaminas A, D, E y K",
+                            "Las vitaminas C y B",
+                            "La a y la c son correctas"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Cuál es la última capa del tubo digestivo?",
+                        opciones: [
+                            "Submucosa",
+                            "Mucosa",
+                            "Serosa o Adventicia",
+                            "Muscular"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "El páncreas es una  glándula mixta.Señala la correcta",
+                        opciones: [
+                            "La secreción exocrina(se vierte al duodeno  y contiene enzimas que degradan los nutrientes",
+                            "La secreción endocrina(se vierte a la sangre,destaca la insulina y el glucagón.",
+                            "Ninguna es correcta",
+                            "A y B son correctas"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Qué diferencia principal hay entre la acidosis y la alcalosis respiratoria?",
+                        opciones: [
+                            "La acidosis se debe a un aumento de la PaCO₂, mientras que la alcalosis se debe a una disminución de la PaCO₂.",
+                            "La acidosis ocurre cuando hay menos dióxido de carbono en la sangre y la alcalosis cuando hay más.",
+                            "Ambas condiciones se deben a un aumento del bicarbonato en sangre.",
+                            "La acidosis provoca respiración rápida y profunda, mientras que la alcalosis causa respiración lenta y superficial."
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "Elige la respuesta INCORRECTA",
+                        opciones: [
+                            "La hipoxemia significa tener menos oxígeno en sangre",
+                            "Las inflamaciones de las vías respiratorias altas son el asma , bronquitis y neumonía",
+                            "Algunos síntomas del aparato respiratorio son la tos , cianosis y silbancias",
+                            "La apnea es la ausencia de respiración"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Que son los minerales?",
+                        opciones: [
+                            "Son elementos orgánicos que se suelen ingerir en forma de sales minerales y en suficiente  cantidad con la dieta",
+                            "Son elementos inorganicos que se suelen ingerir en forma de sales minerales y en suficiente cantidad con la dieta",
+                            "Son elementos inorganicos que se digieren en forma de agua y en poca cantidad con la dieta",
+                            "Todas son correctas"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Cuál es la característica principal del asma?",
+                        opciones: [
+                            "Inflamación de los bronquios, lo que los vuelve más gruesos y con más moco.",
+                            "Infección bacteriana que afecta los pulmones",
+                            "Reducción de la cantidad de oxígeno en la sangre sin inflamación",
+                            "Bloqueo total de las vías respiratorias sin inflamación."
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cuál es la causa de la tuberculosis?",
+                        opciones: [
+                            "Un virus altamente contagioso",
+                            "Una infección bacteriana crónica.",
+                            "Una reacción alérgica en los pulmones",
+                            "La inhalación de humo de tabaco."
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Cuál de los siguientes nutrientes aporta más energía por gramo?",
+                        opciones: [
+                            "Carbohidratos",
+                            "Lípidos",
+                            "Proteínas",
+                            "Fibra dietética."
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Cuál es el componente mayoritario de la bilis?",
+                        opciones: [
+                            "Agua",
+                            "Sales biliares",
+                            "Lecitina",
+                            "Ácidos grasos"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cómo se absorben los carbohidratos?",
+                        opciones: [
+                            "En forma de disacáridos",
+                            "En forma de polisacáridos",
+                            "En forma de monosacáridos",
+                            "En forma de oligosacáridos"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Cuál es un síntoma clásico de la hepatitis?",
+                        opciones: [
+                            "Dolor en la parte inferior del abdomen",
+                            "Ictericia, debido a un exceso de bilirrubina en el organismo",
+                            "Aumento en la producción de enzimas pancreáticas",
+                            "Disminución en la absorción de carbohidratos"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Cuál de las siguientes opciones NO es una causa frecuente de insuficiencia hepática aguda?",
+                        opciones: [
+                            "Medicamentos",
+                            "Hepatitis crónica",
+                            "Cálculos biliares",
+                            "Cáncer de hígado"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Cuál es el órgano común a los aparatos respiratorio y digestivo?",
+                        opciones: [
+                            "Laringe",
+                            "Esófago",
+                            "Tráquea",
+                            "Faringe"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Dónde se localiza la ampolla de Vater?",
+                        opciones: [
+                            "Duodeno",
+                            "Yeyuno",
+                            "Ciego",
+                            "Íleon"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cuál de estas lipoproteínas recoge el colesterol de las arterias, lo lleva al hígado y es secretado por la bilis?",
+                        opciones: [
+                            "LDL",
+                            "HDL",
+                            "VLDL",
+                            "MDL"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Qué signo NO está asociado a la insuficiencia respiratoria?",
+                        opciones: [
+                            "Hipoxia",
+                            "Hipercapnia",
+                            "Acidosis respiratoria",
+                            "Hipoglucemia"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Cuál de las siguientes opciones NO es una causa común de insuficiencia respiratoria (IR)?",
+                        opciones: [
+                            "Obstrucción de las vías aéreas altas",
+                            "Enfermedades cardíacas",
+                            "Ingesta excesiva de alimentos grasos",
+                            "Traumatismos torácicos que impidan la ventilación"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Cómo se llama el conjunto de actividades involuntarias que el organismo realiza mientras está en reposo absoluto?",
+                        opciones: [
+                            "Gasto energético total",
+                            "Tasa de actividad física",
+                            "Metabolismo basal",
+                            "Energía total diaria"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿ Que es una pleura ?",
+                        opciones: [
+                            "Membrana serosa que recubre los pulmones",
+                            "Capilares que recubren los bronquios",
+                            "Es la parte de la tráquea",
+                            "Es un tipo de célula caliciforme"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿ En qué consiste la ventilación pulmonar ?",
+                        opciones: [
+                            "Transporte de oxígeno a través de la sangre",
+                            "Reacciones metabólicas en las cuales las células musculares captan oxígeno",
+                            "Proceso mecánico de entrada y salida de aire",
+                            "Captación de nutrientes"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿ Cuál es la unidad más básica de las proteínas ?",
+                        opciones: [
+                            "Monosacáridos ",
+                            "Ácidos grasos",
+                            "Vitaminas",
+                            "Aminoácidos "
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿La hematemesis se caracteriza por?",
+                        opciones: [
+                            "La motilidad gastrointestinal ",
+                            "Sangre en el vómito",
+                            "Heces con un aspecto pastoso",
+                            "Sensación desagradable de mal estar en el estómago"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "La úlcera péptica es una lesión de la mucosa derivada por trastornos en el estómago, la causa más frecuente es",
+                        opciones: [
+                            "La causa puede estar en el propio intestino por lesiones o déficits vasculares",
+                            "Por inflamación de la mucosa gástrica",
+                            "Infección por Helicobacter pylori",
+                            "Ninguna es correcta"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿De qué están formados los triglicéridos?",
+                        opciones: [
+                            "Omega 3",
+                            "Una molécula de glicerol y tres ácidos grasos",
+                            "Ácidos grasos",
+                            "Ninguna es correcta"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Que son los lípidos?",
+                        opciones: [
+                            "moléculas compuestas principalmente por carbono e hidrógeno",
+                            "Moléculas compuestas por oxígeno",
+                            "Moléculas compuestas por carbono y nitrato",
+                            "Ninguna es correcta"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "Dónde afecta la enfermedad de Cronh?",
+                        opciones: [
+                            "En el estómago",
+                            "En el intestino (todo el tubo digestivo)",
+                            "En el hígado",
+                            "En el páncreas"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "Cuál es una afectación de trastorno del intestino grueso?",
+                        opciones: [
+                            "Diverticulitis",
+                            "Cirrosis",
+                            "Cálculos",
+                            "Pirosis"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "La fase oral de la digestión",
+                        opciones: [
+                            "ingestión de alimentos",
+                            "formación del bolo alimenticio",
+                            "deglución",
+                            "todas son correctas"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: " en qué consiste la fase esofágica de la digestión?",
+                        opciones: [
+                            "el bolo alimenticio avanza por el esófago",
+                            "el bolo alimenticio entra por el estómago",
+                            "ingesta de alimentos",
+                            "ninguna es correcta"
+                        ],
+                        correcta: 0
+                    },
+
+                ],
+
+                examen3: [
+                    {
+                        pregunta: "¿A qué grupo del sistema productivo hace referencia esta definición “entidades privadas sin ánimo de lucro?",
+                        opciones: [
+                            "Empresas",
+                            "Administraciones Públicas",
+                            "ONG",
+                            "Banco de España"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Qué función tienen las Administraciones Públicas?",
+                        opciones: [
+                            "Generar beneficios económicos.",
+                            "Ayudar a la sociedad.",
+                            "No tienen ninguna función.",
+                            "Actuar como empresas privadas."
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "Cuál de los siguientes es un beneficio de la Economía verde y circular ?",
+                        opciones: [
+                            "Reduce el efecto invernadero y el impacto medioambiental",
+                            "No se generan nuevos empleos",
+                            "Disminución de las actividades de servicio",
+                            "Ninguna es correcta"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cuál de los siguientes es un proceso imprescindible de la economía verde y circular?",
+                        opciones: [
+                            "Desmaterialización",
+                            "Descarbonizacion",
+                            "Materialización",
+                            "A y B son correctas"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Qué ODS está relacionado con la economía circular?",
+                        opciones: [
+                            "ODS 2 Hambre cero",
+                            "ODS 10 Reducción de las desigualdades",
+                            "ODS 12 Producción y consumo responsable",
+                            "Ninguna de las anteriores es correcta"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Qué obliga la Unión Europea a las empresas a presentar anualmente?",
+                        opciones: [
+                            "Un informe financiero",
+                            "Un informe de gestión",
+                            "Un documento de responsabilidad social",
+                            "Un reporte voluntario"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Cuál de las siguientes NO es una ventaja de integrar los aspectos ASG en una empresa?",
+                        opciones: [
+                            "Reducción de impuestos obligatorios",
+                            "Mejor acceso a financiación",
+                            "Atracción y retención de talento",
+                            "Rentabilidad a largo plazo"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: ".El ODS relacionado con la producción limpia es….",
+                        opciones: [
+                            "Industria,innovación e infraestructura",
+                            "Reducción de las desigualdades",
+                            "Agua limpia y saneamiento",
+                            "Alianzas para lograr los objetivos"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cuál NO es una opción para la implantación de la producción limpia?",
+                        opciones: [
+                            "Buenas prácticas medioambientales",
+                            "Reciclaje interno o reutilizado",
+                            "Cambios en el producto",
+                            "Prioridad en la venta de producto"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Cuáles de las siguientes opciones NO forman parte de las 7 'R' de la economía circular?",
+                        opciones: [
+                            "Rediseñar",
+                            "Reducir",
+                            "Recargar",
+                            "Reciclar"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Qué principio de la economía circular implica dar un nuevo uso a los objetos en lugar de desecharlos?",
+                        opciones: [
+                            "Reparar",
+                            "Reutilizar",
+                            "Renovar",
+                            "Reciclar"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "Una forma ordenada para reducir el impacto medioambiental es:",
+                        opciones: [
+                            "Analizar los elementos que definen un proceso de producción",
+                            "Un entorno económico y social",
+                            "Reutilizar",
+                            "Ninguna es correcta"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "Indica cuál es uno de los elementos que definen un proceso de producción",
+                        opciones: [
+                            "Cambios tecnológicos",
+                            "Cambios en el producto",
+                            "Buenas prácticas medioambientales",
+                            "Todas son correctas"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿A partir de qué proceso diseñan las empresas sus estrategias ASG?",
+                        opciones: [
+                            "Crear nuevos productos para el mercado",
+                            "Analizar la situación de la empresa en relación con su entorno",
+                            "Aumentar las ventas y los beneficios",
+                            "Mejorar la imagen de la marca únicamente"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Qué son los “Compromisos y políticas ASG” según el texto?",
+                        opciones: [
+                            "Problemas ambientales y sociales que afectan a la empresa.",
+                            "Productos diseñados para un mercado específico",
+                            "Principios y medidas que reducen riesgos y aprovechan oportunidades en los ámbitos ASG",
+                            "Herramientas de marketing para mejorar las ventas"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Cuál es la primera fase del ciclo de vida del producto según el modelo lineal de producción y consumo?",
+                        opciones: [
+                            "Diseño",
+                            "Producción",
+                            "Aprovisionamiento ",
+                            "Consumo"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Qué sucede en la fase de “Desecho” del ciclo de vida del producto?",
+                        opciones: [
+                            "Se transporta el producto a los centros de venta",
+                            "Se utilizan los bienes o servicios hasta no poder usarlos más",
+                            "Se fabrican los bienes o servicios en grandes cantidades",
+                            "Se eliminan los materiales empleados en producir el bien o servicio"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "Según la norma ISO 14006-2011, ¿cuál es el objetivo principal del ecodiseño?",
+                        opciones: [
+                            "Reducir los costos de producción de los productos",
+                            "Mejorar la estética y funcionalidad de los productos",
+                            "Minimizar los impactos ambientales integrando aspectos ecológicos en el diseño",
+                            "Aumentar la vida útil de los productos mediante el uso de plásticos"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Qué estrategia de ecodiseño se aplica al reemplazar componentes plásticos por materiales renovables, como la madera, en la fabricación de productos?",
+                        opciones: [
+                            "Desmaterialización",
+                            "Uso de materiales de impacto reducido.",
+                            "Optimización de la distribución",
+                            "Multifuncionalidad"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Qué es la producción limpia?",
+                        opciones: [
+                            "Un proceso que se centra únicamente en la reducción de costos",
+                            "Un conjunto de prácticas que buscan minimizar los daños al ecosistema mediante procesos productivos eficientes",
+                            "La producción de bienes sin ningún tipo de evaluación ambiental",
+                            "Un proceso que solo se aplica a la industria agrícola"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Qué se evalúa durante el proceso de producción limpia?",
+                        opciones: [
+                            "Únicamente los beneficios económicos de la empresa",
+                            "Los procesos de producción, los bienes producidos y los servicios prestados",
+                            "El impacto social de la empresa en sus trabajadores",
+                            "Solo los bienes y productos terminados"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Qué fase de la evaluación de producción limpia implica la recolección de información sobre los procesos actuales de la empresa?",
+                        opciones: [
+                            "Generación de opciones",
+                            "Recogida y análisis de datos",
+                            "Implementación",
+                            "Evaluación y control"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "¿Cuál de estos es un beneficio del ecodiseño?",
+                        opciones: [
+                            "Mejora de la imagen pública",
+                            "No obtener beneficios económicos",
+                            "Obtención de beneficios materiales",
+                            "Menor motivación personal"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cuántas etapas hay en el proceso de ecodiseño?",
+                        opciones: [
+                            "Dos",
+                            "Ocho",
+                            "Cinco",
+                            "Ninguna de las anteriores es correcta"
+                        ],
+                        correcta: 2
+                    },
+                    {
+                        pregunta: "¿Cuál de los siguientes grupos de interés forma parte interna de la empresa?",
+                        opciones: [
+                            "Dirección o directivos",
+                            "Proveedores",
+                            "Competencia",
+                            "Sociedad o comunidad"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Cuál de los siguientes NO es un grupo de interés de la empresa?",
+                        opciones: [
+                            "Proveedores",
+                            "Clientes",
+                            "Empleados",
+                            "Familiares de los empleados"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Qué problemas puede causar la falta de innovación y adaptación del mercado?",
+                        opciones: [
+                            "Menores oportunidades de expansión a nuevos mercados",
+                            "Aumento de beneficios",
+                            "Reducción de costos de producción",
+                            "Mayor demanda de productos"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿Qué riesgo está asociado con el uso de recursos no renovables?",
+                        opciones: [
+                            "Escasez de recursos naturales y volatilidad en sus precios",
+                            "Mayor estabilidad en los costos de producción",
+                            "Reducción de regulaciones ambientales",
+                            "Aumento en la disponibilidad de materias primas"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿ A qué hace referencia los aspectos ASG ?",
+                        opciones: [
+                            "Aspectos ambientales, sociales y de gobernanza",
+                            "Aspectos ambientales, de seguridad y de gobernanza",
+                            "Aspectos acústicos, social y jerárquico",
+                            "Aspectos ambientales, de seguridad y geriátrico"
+                        ],
+                        correcta: 0
+                    },
+                    {
+                        pregunta: "¿ Que ASG tiene relación con el ODS 12 ( Producción y consumo responsable)?",
+                        opciones: [
+                            "Ética y cultura empresarial, lucha contra la corrupción",
+                            "Adaptación al cambio climático",
+                            "Igualdad de trato y oportunidades",
+                            "Todas son correctas"
+                        ],
+                        correcta: 3
+                    },
+                    {
+                        pregunta: "¿Qué persigue la economía circular?",
+                        opciones: [
+                            "Aumentar la generación de residuos",
+                            "Conservar el valor de los recursos y productos",
+                            "Usar más materiales en la producción",
+                            "Todas son correctas"
+                        ],
+                        correcta: 1
+                    },
+                    {
+                        pregunta: "En el modelo de economía circular, ¿Qué  ocurre con la presión sobre los ecosistemas?",
+                        opciones: [
+                            "Aumenta ",
+                            "Se mantiene igual",
+                            "Disminuye",
+                            "Ninguna es correcta"
+                        ],
+                        correcta: 2
+                    },
+
+                ]
+            };
+
+            // Evento para comenzar el test
+            $('#startQuiz').click(function () {
+                const examenSeleccionado = $('#examSelector').val(); // Obtener el examen seleccionado
+                preguntas = examenes[examenSeleccionado]; // Cargar las preguntas del examen seleccionado
+                if (preguntas.length > 0) {
+                    preguntas.sort(() => Math.random() - 0.5); // Aleatorizar el orden
+                    preguntaActual = 0;
+                    correctas = 0;
+                    mostrarPregunta(preguntaActual); // Mostrar la primera pregunta
+                    actualizarProgreso();
+                }
+            });
+
+            // Función para mostrar una pregunta en el DOM
+            function mostrarPregunta(index) {
+                const pregunta = preguntas[index];
+                const opcionesHTML = pregunta.opciones.map((opcion, i) => `
+                    <label>
+                        <input type="radio" name="question${index}" value="${i}">
+                        ${opcion}
+                    </label>
+                `).join('');
+                $('#questions').html(`
+                    <div class="question-container">
+                        <p><strong>${index + 1}. ${pregunta.pregunta}</strong></p>
+                        ${opcionesHTML}
+                        <span class="feedback" id="feedback${index}"></span>
+                        <button id="nextQuestion" style="display:none;">Siguiente pregunta</button>
+                    </div>
+                `);
+
+                // Detectar cuando el usuario selecciona una opción
+                $('input[name="question' + index + '"]').change(function () {
+                    const seleccionada = $(this).val();
+                    const feedback = $('#feedback' + index);
+
+                    // Remover estilos previos
+                    $('label').removeClass('correcto incorrecto');
+                    if (seleccionada == pregunta.correcta) {
+                        correctas++;
+                        feedback.html('<span class="correct">✔ Correcto</span>');
+                        $(this).closest('label').addClass('correcto'); // Añadir clase para correcta
+                    } else {
+                        feedback.html('<span class="incorrect">✘ Incorrecto</span>');
+                        $(this).closest('label').addClass('incorrecto'); // Añadir clase para incorrecta
+                    }
+
+                    // Mostrar el botón para la siguiente pregunta
+                    $('#nextQuestion').show();
+                });
+
+                // Avanzar a la siguiente pregunta al hacer clic en "Siguiente pregunta"
+                $('#nextQuestion').click(function () {
+                    preguntaActual++;
+                    if (preguntaActual < preguntas.length) {
+                        mostrarPregunta(preguntaActual);
+                        actualizarProgreso();
+                    } else {
+                        mostrarResultadoFinal();
+                    }
+                });
+            }
+
+            // Función para actualizar la barra de progreso
+            function actualizarProgreso() {
+                const porcentaje = ((preguntaActual + 1) / preguntas.length) * 100;
+                $('#progress').css('width', porcentaje + '%');
+                $('#progressPercentage').text(Math.round(porcentaje) + '%');
+            }
+
+            // Mostrar el resultado final al finalizar todas las preguntas
+            function mostrarResultadoFinal() {
+                const totalPreguntas = preguntas.length;
+                const nota = (correctas / totalPreguntas) * 10;
+                $('#questions').html(`
+                    <h2>Has completado el test</h2>
+                    <p>Tu puntuación final es: ${nota.toFixed(2)} / 10</p>
+                `);
+                $('#progress').css('width', '100%');
+                $('#progressPercentage').text('100%');
+            }
+        });
+    </script>
+</body>
+</html>
