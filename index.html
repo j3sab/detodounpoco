@@ -268,117 +268,407 @@
                     { pregunta: "El sistema TNM para la clasificación de tumores hace referencia a:", opciones: ["Tamaño del tumor, Número de ganglios afectados, Metástasis a distancia", "Tipo de Neoplasia, Manifestación clínica, Morfología celular", "Tratamiento, Necrosis, Mortalidad", "Todas son correctas"], correcta: 0 },
                     { pregunta: "¿Cuál de los siguientes es un factor pronóstico desfavorable para el cáncer oral?", opciones: ["Detección temprana", "Metástasis ganglionar", "Ausencia de consumo de tabaco", "Buen estado nutricional"], correcta: 1 }
                 ],
+
+                // ====================================================================
+                // NUEVO EXAMEN DE DEMOGRAFÍA (78 PREGUNTAS)
+                // ====================================================================
+                
                 examen_demografia: [
-                    { pregunta: "¿Qué es la demografía?", opciones: ["Es la ciencia que estudia el crecimiento económico de un país.", "Es la ciencia que estudia la estructura, el volumen, la evolución, la distribución de la población y sus características.", "Es la ciencia que estudia la distribución de las enfermedades en una población.", "Es el estudio de los determinantes sociales de la salud."], correcta: 1 },
-                    { pregunta: "¿Cuál es la diferencia entre demografía estática y dinámica?", opciones: ["La estática estudia la población en un momento dado; la dinámica estudia su evolución a lo largo del tiempo.", "La estática estudia las causas de los cambios; la dinámica estudia las consecuencias.", "La estática solo usa censos; la dinámica solo usa registros civiles.", "No hay diferencia, son el mismo concepto."], correcta: 0 },
-                    { pregunta: "¿Qué es un censo de población?", opciones: ["Un registro continuo de nacimientos, defunciones y migraciones.", "El recuento individualizado de toda la población en un momento determinado.", "Un estudio por muestreo de una característica específica de la población.", "Un listado de votantes para elecciones."], correcta: 1 },
-                    { pregunta: "¿Qué dato poblacional puede obtenerse únicamente a través de un censo?", opciones: ["El número de nacimientos en un año.", "La tasa de mortalidad.", "La distribución por edad y sexo en un instante.", "La tasa de migración neta."], correcta: 2 },
-                    { pregunta: "¿Cuál es la principal fuente de datos para la Demografía Dinámica?", opciones: ["El Padrón Municipal de Habitantes.", "El Registro Civil (nacimientos, defunciones, matrimonios).", "Las encuestas de salud.", "Los censos de población."], correcta: 1 },
-                    { pregunta: "¿Qué es el Padrón Municipal de Habitantes?", opciones: ["Una base de datos estadística que se actualiza cada 10 años.", "Un registro administrativo que acredita la residencia y el domicilio de los habitantes de un municipio.", "Un listado de personas con derecho a voto.", "El registro de extranjeros residentes en España."], correcta: 1 },
-                    { pregunta: "¿Qué organismo español realiza el Censo de Población y Viviendas?", opciones: ["El Ministerio de Sanidad.", "El Instituto Nacional de Estadística (INE).", "El Centro de Investigaciones Sociológicas (CIS).", "La Seguridad Social."], correcta: 1 },
-                    { pregunta: "¿Cuál es un inconveniente del Padrón Municipal respecto al Censo?", opciones: ["Es menos frecuente.", "No tiene carácter legal.", "Tiende a sobreestimar la población.", "Solo registra a los ciudadanos españoles."], correcta: 2 },
-                    { pregunta: "¿Qué función demográfica estudia la composición de la población por edad, sexo y otras características?", opciones: ["Mortalidad", "Natalidad/Fecundidad", "Estructura de la Población", "Migración"], correcta: 2 },
-                    { pregunta: "¿Qué función demográfica describe la frecuencia de los nacimientos y cómo influyen en el tamaño de la población?", opciones: ["Mortalidad", "Natalidad/Fecundidad", "Migración", "Estructura de la Población"], correcta: 1 },
-                    { pregunta: "¿Qué indicador mide la intensidad con que se producen las muertes en una población?", opciones: ["Natalidad/Fecundidad", "Mortalidad", "Migración", "Estructura de la Población"], correcta: 1 },
-                    { pregunta: "¿Qué función demográfica es el movimiento espacial de la población?", opciones: ["Mortalidad", "Natalidad/Fecundidad", "Migración", "Estructura de la Población"], correcta: 2 },
-                    { pregunta: "¿Qué característica de la población (estructura) se considera la más importante para el análisis demográfico?", opciones: ["Estado civil", "Nivel de estudios", "Edad y sexo", "Ocupación"], correcta: 2 },
-                    { pregunta: "¿Cómo se denomina la representación gráfica de la distribución de la población por edad y sexo?", opciones: ["Gráfico de barras", "Histograma", "Pirámide de población", "Curva epidémica"], correcta: 2 },
-                    { pregunta: "¿Qué forma de pirámide de población indica una población joven con alta natalidad y mortalidad?", opciones: ["Campana (Estacionaria)", "Urna (Regresiva)", "Pagoda (Progresiva)", "Columna"], correcta: 2 },
-                    { pregunta: "¿Qué forma de pirámide de población indica una población envejecida con baja natalidad y mortalidad?", opciones: ["Campana (Estacionaria)", "Urna (Regresiva)", "Pagoda (Progresiva)", "Columna"], correcta: 1 },
-                    { pregunta: "¿Qué forma de pirámide de población es típica de países desarrollados con crecimiento demográfico lento o nulo?", opciones: ["Pagoda (Progresiva)", "Urna (Regresiva)", "Campana (Estacionaria)", "Campana (Estacionaria) o Urna (Regresiva)"], correcta: 3 },
-                    { pregunta: "¿Qué es la esperanza de vida?", opciones: ["La edad máxima que puede vivir un ser humano.", "El promedio de años que se espera viva una persona al nacer, si se mantienen las condiciones de mortalidad.", "El número de personas que sobreviven a los 65 años.", "La edad a la que muere la persona más vieja de una población."], correcta: 1 },
-                    { pregunta: "¿Qué es la tasa bruta de natalidad (TBN)?", opciones: ["El número de nacimientos por cada 1.000 habitantes en un periodo.", "El número de hijos que tiene una mujer a lo largo de su vida fértil.", "El número de defunciones por cada 1.000 habitantes.", "El número de nacimientos en un año dividido por el número de mujeres en edad fértil."], correcta: 0 },
-                    { pregunta: "¿Cuál es el principal inconveniente de la Tasa Bruta de Natalidad?", opciones: ["Es difícil de calcular.", "No tiene en cuenta el número de mujeres en edad fértil.", "Solo considera el total de defunciones.", "Se ve afectada por la migración."], correcta: 1 },
-                    { pregunta: "¿Qué es la tasa global de fecundidad (TGF)?", opciones: ["El número de defunciones por cada 1.000 habitantes.", "El número de hijos promedio que tendría una mujer si mantiene las tasas de fecundidad por edad.", "El número de matrimonios por cada 1.000 habitantes.", "El número de personas que emigran."], correcta: 1 },
-                    { pregunta: "¿Qué valor de Tasa Global de Fecundidad (TGF) se considera la tasa de reemplazo generacional?", opciones: ["1.0 hijos por mujer.", "2.1 hijos por mujer.", "3.5 hijos por mujer.", "Más de 5 hijos por mujer."], correcta: 1 },
-                    { pregunta: "¿Qué es la tasa bruta de mortalidad (TBM)?", opciones: ["El número de muertes por cada 1.000 habitantes en un periodo.", "La probabilidad de morir a una edad específica.", "El número de muertes infantiles por cada 1.000 nacidos vivos.", "El número de defunciones por enfermedad específica."], correcta: 0 },
-                    { pregunta: "¿Cuál es el principal inconveniente de la Tasa Bruta de Mortalidad?", opciones: ["Solo considera las defunciones por causas violentas.", "Se ve influida por la estructura de edad de la población (una población envejecida tendrá TBM más alta).", "Solo se puede calcular con datos censales.", "Es más baja en países en desarrollo."], correcta: 1 },
-                    { pregunta: "¿Qué tasa de mortalidad es considerada un indicador sensible del nivel de desarrollo socioeconómico de un país?", opciones: ["Tasa Bruta de Mortalidad.", "Tasa de Mortalidad por Cáncer.", "Tasa de Mortalidad Materna.", "Tasa de Mortalidad Infantil."], correcta: 3 },
-                    { pregunta: "¿Qué mide la Tasa de Migración Neta?", opciones: ["La diferencia entre el número de emigrantes e inmigrantes.", "El número total de personas que se desplazan.", "La tasa de mortalidad de los migrantes.", "La distancia media recorrida por los migrantes."], correcta: 0 },
-                    { pregunta: "¿Qué se entiende por 'Envejecimiento Demográfico'?", opciones: ["Un aumento en la esperanza de vida al nacer.", "Un aumento en el número absoluto y la proporción de personas mayores.", "Una disminución de la Tasa Bruta de Mortalidad.", "Una disminución de la Tasa Global de Fecundidad."], correcta: 1 },
-                    { pregunta: "¿Cuál es una consecuencia económica del envejecimiento demográfico?", opciones: ["Aumento de la Tasa Bruta de Natalidad.", "Mayor presión sobre el sistema de pensiones y salud.", "Disminución de la esperanza de vida.", "Aumento de la población activa en el sector primario."], correcta: 1 },
-                    { pregunta: "¿Cómo se denomina al proceso por el cual la población urbana crece más rápido que la rural?", opciones: ["Envejecimiento", "Globalización", "Urbanización", "Transición Demográfica"], correcta: 2 },
-                    { pregunta: "¿Qué es la 'Transición Demográfica'?", opciones: ["Un cambio en los patrones de migración internacional.", "Un modelo que explica el paso de altas tasas de natalidad y mortalidad a bajas tasas.", "El proceso de urbanización en los países en desarrollo.", "El cambio en la esperanza de vida de una población."], correcta: 1 },
-                    { pregunta: "¿Cuál de estos países se encuentra típicamente en la etapa 4 o 5 (post-transición) de la Transición Demográfica?", opciones: ["Niger", "España", "India", "Nigeria"], correcta: 1 },
-                    { pregunta: "¿Qué indicador se utiliza para medir el impacto de las migraciones en la población total?", opciones: ["Tasa de Mortalidad Bruta", "Tasa de Fecundidad", "Tasa de Crecimiento Natural", "Tasa de Crecimiento Total"], correcta: 3 },
-                    { pregunta: "¿Qué indica un Índice de Dependencia Global alto?", opciones: ["Una baja tasa de paro.", "Una proporción alta de población inactiva (niños y mayores) respecto a la población activa.", "Una baja esperanza de vida.", "Una alta tasa de urbanización."], correcta: 1 },
-                    { pregunta: "¿Cuál es la causa principal del crecimiento natural (vegetativo) negativo en muchos países desarrollados?", opciones: ["Alta mortalidad.", "Baja natalidad, por debajo de la tasa de reemplazo.", "Alta emigración.", "Baja esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Qué tipo de migración es un movimiento de un país a otro?", opciones: ["Interna", "Externa o Internacional", "Temporal", "Estacional"], correcta: 1 },
-                    { pregunta: "¿Qué mide la Tasa de Mortalidad Específica por Edad?", opciones: ["El número total de muertes en un año.", "El número de muertes en un grupo de edad determinado por cada 1.000 personas de ese mismo grupo.", "La diferencia entre la esperanza de vida de hombres y mujeres.", "El impacto de la migración en la mortalidad."], correcta: 1 },
-                    { pregunta: "¿Cuál es el efecto de la 'Estructura de la Población' sobre las tasas brutas?", opciones: ["Las tasas brutas son independientes de la estructura de edad.", "La estructura de edad no influye en la Tasa Bruta de Mortalidad.", "La Tasa Bruta de Mortalidad y Natalidad son fuertemente influidas por la composición por edad (ej. TBM alta en población envejecida).", "Solo influye en la Tasa Global de Fecundidad."], correcta: 2 },
-                    { pregunta: "¿Qué fenómeno se da cuando la Tasa Global de Fecundidad cae por debajo de la tasa de reemplazo (2.1 hijos por mujer)?", opciones: ["Explosión demográfica", "Crecimiento cero o negativo a largo plazo", "Rejuvenecimiento poblacional", "Aumento de la esperanza de vida"], correcta: 1 },
-                    { pregunta: "¿Qué es el 'Dividendo Demográfico'?", opciones: ["El ahorro que acumula la población anciana.", "Un período en el que la proporción de población activa es mucho mayor que la población dependiente (baja dependencia).", "Un aumento de la tasa de mortalidad.", "La disminución de la esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Qué dato demográfico se utiliza para calcular la 'Tasa Específica de Fecundidad por Edad'?", opciones: ["El total de nacimientos.", "El número de mujeres en cada grupo de edad fértil.", "El total de la población activa.", "La Tasa Bruta de Natalidad."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Densidad de Población'?", opciones: ["El total de habitantes en un país.", "El número de habitantes por unidad de superficie (km²).", "La distribución de la población por edad y sexo.", "El promedio de la esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Cuál de estos NO es un componente del crecimiento de la población?", opciones: ["Natalidad", "Mortalidad", "Migración", "Nivel de alfabetización"], correcta: 3 },
-                    { pregunta: "¿Qué es un 'Cohorte' en demografía?", opciones: ["Un grupo de población que comparte un evento demográfico común en el mismo período (ej. nacidos en el mismo año).", "Un grupo de personas que viven en la misma área geográfica.", "Una representación gráfica de la población.", "El total de la población de un país."], correcta: 0 },
-                    { pregunta: "¿Qué se entiende por 'Índice de Envejecimiento'?", opciones: ["El porcentaje de personas menores de 15 años.", "La razón entre la población de 65 años o más y la población menor de 15 años.", "El promedio de la edad de la población.", "La Tasa de Mortalidad por edad avanzada."], correcta: 1 },
-                    { pregunta: "¿Qué causa principal contribuyó a la alta mortalidad en la fase pre-transicional (antiguo régimen) del modelo demográfico?", opciones: ["Accidentes de tráfico.", "Guerras, epidemias y hambrunas.", "Enfermedades crónicas.", "Cáncer y enfermedades cardiovasculares."], correcta: 1 },
-                    { pregunta: "¿En qué etapa de la Transición Demográfica se observa la 'Explosión Demográfica'?", opciones: ["Etapa 1 (Pre-transicional).", "Etapa 2 (Inicio de la transición, con caída de la mortalidad e inicio de la natalidad).", "Etapa 3 (Caída de la natalidad).", "Etapa 4 (Post-transicional)."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Población Activa'?", opciones: ["Las personas menores de 16 años.", "El conjunto de personas en edad de trabajar que tienen empleo o lo buscan.", "La población jubilada.", "El total de habitantes de un país."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Emigrante'?", opciones: ["Persona que entra a vivir en un país o región (Inmigrante).", "Persona que sale de un país o región para vivir en otro.", "Persona que se desplaza temporalmente por turismo.", "Persona que cambia de domicilio dentro del mismo municipio."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Mortalidad Perinatal'?", opciones: ["La mortalidad infantil después del primer año de vida.", "La suma de la mortalidad fetal tardía y la mortalidad neonatal precoz (antes de 7 días).", "La mortalidad causada por el embarazo y el parto en la mujer.", "La mortalidad de personas de 65 años o más."], correcta: 1 },
-                    { pregunta: "¿Qué indicador complementa mejor la Tasa Bruta de Natalidad para un análisis más preciso de los nacimientos?", opciones: ["Tasa Bruta de Mortalidad.", "Tasa de Crecimiento Total.", "Tasa Global de Fecundidad.", "Tasa de Migración Neta."], correcta: 2 },
-                    { pregunta: "¿Qué se entiende por 'Movimiento Natural o Vegetativo de la población'?", opciones: ["El efecto de la migración en la población.", "La diferencia entre nacimientos y defunciones.", "La suma de la población activa y la inactiva.", "El cambio en la estructura de edad de la población."], correcta: 1 },
-                    { pregunta: "¿Cuál es el impacto de la mejora en la sanidad y la alimentación en una población?", opciones: ["Aumento de la natalidad y disminución de la esperanza de vida.", "Aumento de la mortalidad y disminución de la esperanza de vida.", "Aumento de la esperanza de vida y disminución de la mortalidad.", "Disminución de la natalidad y la migración."], correcta: 2 },
-                    { pregunta: "¿Qué variable demográfica es la principal impulsora de la forma 'Campana' o estacionaria en la pirámide de población?", opciones: ["Alta migración neta negativa.", "Baja natalidad y mortalidad que se equilibran.", "Alta mortalidad infantil.", "Alta fecundidad por encima del reemplazo."], correcta: 1 },
-                    { pregunta: "¿Qué mide la 'Tasa de Dependencia de Vejez'?", opciones: ["La población menor de 15 años respecto a la población activa.", "La población de 65 años o más respecto a la población en edad activa (16-64 años).", "El total de población inactiva respecto a la población activa.", "La esperanza de vida a los 65 años."], correcta: 1 },
-                    { pregunta: "¿Cuál de las siguientes es una fuente de datos demográficos de carácter administrativo y continuo?", opciones: ["El Censo de Población (periódico).", "La Encuesta de Salud (por muestreo).", "El Registro Civil (registro continuo de hechos vitales).", "La Pirámide de población (representación gráfica)."], correcta: 2 },
-                    { pregunta: "¿Qué indica un 'Índice Sintético de Fecundidad' de 1.2 hijos por mujer?", opciones: ["La población está creciendo rápidamente.", "La población se está reproduciendo a una tasa por debajo del reemplazo generacional.", "La migración es muy alta.", "La mortalidad infantil es muy alta."], correcta: 1 },
-                    { pregunta: "¿Qué característica define la etapa 3 (final de la transición) de la Transición Demográfica?", opciones: ["Altas tasas de natalidad y mortalidad.", "Baja mortalidad y natalidad con crecimiento bajo o nulo.", "Caída de la natalidad después de la caída de la mortalidad.", "Alta mortalidad infantil y baja esperanza de vida."], correcta: 2 },
-                    { pregunta: "¿Cuál es el principal factor que impulsa la caída de la natalidad en la Transición Demográfica?", opciones: ["Mejora de la sanidad.", "Control de la mortalidad.", "Cambios sociales, culturales y económicos (educación, rol de la mujer, coste de la crianza).", "Aumento de la migración."], correcta: 2 },
-                    { pregunta: "¿Qué representa la base de una Pirámide de Población?", opciones: ["La población más envejecida.", "Los grupos de edad más jóvenes (0-4 años).", "La población activa.", "La esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Inmigrante'?", opciones: ["Persona que abandona un país (emigrante).", "Persona que llega a un país o región para establecer su residencia.", "Persona que viaja por turismo.", "Persona que se desplaza por motivos de estudio."], correcta: 1 },
-                    { pregunta: "¿Qué es el 'Saldo Migratorio'?", opciones: ["La diferencia entre la Tasa de Natalidad y la de Mortalidad.", "El número de habitantes en un municipio.", "La diferencia entre inmigrantes y emigrantes.", "El total de la población activa."], correcta: 2 },
-                    { pregunta: "¿Qué es la 'Tasa de Crecimiento Natural (Vegetativo)'?", opciones: ["La suma de la natalidad y la migración.", "La diferencia entre el número de nacimientos y el número de defunciones.", "La diferencia entre el total de población en dos años consecutivos.", "La tasa de dependencia."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Edad Media de la Población'?", opciones: ["La edad más frecuente en la población.", "La edad a la que muere el 50% de la población.", "El promedio aritmético de las edades de todos los habitantes.", "La edad a la que la Tasa de Mortalidad es máxima."], correcta: 2 },
-                    { pregunta: "¿Cuál es el principal riesgo demográfico asociado a una pirámide de población con forma de 'Urna'?", opciones: ["Explosión demográfica.", "Riesgo de colapso de los sistemas de bienestar social (pensiones, salud).", "Alta mortalidad infantil.", "Baja esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Qué mide la 'Tasa de Mortalidad Infantil'?", opciones: ["Las muertes de niños menores de 5 años.", "Las muertes de niños menores de 1 año por cada 1.000 nacidos vivos.", "Las muertes maternas durante el parto.", "El total de defunciones infantiles."], correcta: 1 },
-                    { pregunta: "¿Qué fenómeno se produce cuando una población joven se traslada de forma masiva a las áreas urbanas?", opciones: ["Envejecimiento de la población rural.", "Disminución de la tasa de fecundidad urbana.", "Aumento de la mortalidad urbana.", "Disminución de la población activa en las ciudades."], correcta: 0 },
-                    { pregunta: "¿Qué es un 'Padrón Continuo'?", opciones: ["El censo que se realiza cada 10 años.", "Un registro civil actualizado solo anualmente.", "Un registro administrativo que se actualiza constantemente (diariamente o en tiempo real).", "Una base de datos de personas fallecidas."], correcta: 2 },
-                    { pregunta: "¿Qué indicador se utiliza para calcular la 'Tasa Específica de Mortalidad'?", opciones: ["El total de defunciones.", "El número de defunciones en un grupo específico (edad, causa, sexo) y la población de ese grupo.", "La Tasa Bruta de Mortalidad.", "La esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Cuál de estos países ha completado la Transición Demográfica y presenta un crecimiento natural negativo?", opciones: ["Kenia", "Brasil", "Alemania", "India"], correcta: 2 },
-                    { pregunta: "¿Qué mide el 'Índice de Fecundidad'?", opciones: ["El total de nacimientos.", "La capacidad real o potencial de una población de reproducirse.", "La Tasa Bruta de Natalidad.", "El total de la población de un país."], correcta: 1 },
-                    { pregunta: "¿Qué es un 'Diagrama de Lexis'?", opciones: ["Un gráfico que representa la estructura de la población.", "Un diagrama que relaciona el tiempo, la edad y el período para el análisis demográfico.", "Un gráfico que muestra el saldo migratorio.", "Una tabla de mortalidad."], correcta: 1 },
-                    { pregunta: "¿Qué tipo de migración es el desplazamiento de trabajadores agrícolas durante la cosecha?", opciones: ["Definitiva", "Interna", "Estacional o temporal", "Externa"], correcta: 2 },
-                    { pregunta: "¿Cuál es el significado de un 'Índice de Sobreenvejecimiento' alto?", opciones: ["Que hay mucha población infantil.", "Que la población mayor de 85 años está creciendo rápidamente en relación a la población de 65-84 años.", "Que la tasa de fecundidad es alta.", "Que la mortalidad infantil es baja."], correcta: 1 },
-                    { pregunta: "¿Cuál es una ventaja de la Tasa Global de Fecundidad (TGF) respecto a la Tasa Bruta de Natalidad (TBN)?", opciones: ["La TBN es más fácil de calcular.", "La TGF elimina el efecto de la estructura de edad de la población, dando una medida más pura de la intensidad de la fecundidad.", "La TGF solo se puede calcular en censos.", "La TGF es menos sensible a los cambios sociales."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Causas de Muerte' en demografía?", opciones: ["El total de defunciones en un año.", "La enfermedad o lesión que produce la muerte, clasificada según la CIE (Clasificación Internacional de Enfermedades).", "La edad media de la población fallecida.", "La tasa bruta de mortalidad."], correcta: 1 },
-                    { pregunta: "¿Qué fenómeno se observa en los países en la etapa 2 de la Transición Demográfica (países en desarrollo)?", opciones: ["Altas tasas de natalidad y mortalidad.", "Caída de la mortalidad con natalidad todavía alta (alto crecimiento).", "Bajas tasas de natalidad y mortalidad.", "Crecimiento negativo de la población."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Esperanza de Vida Libre de Discapacidad'?", opciones: ["La esperanza de vida al nacer, sin más.", "El número de años que se espera que una persona viva sin experimentar una discapacidad significativa.", "La esperanza de vida de las personas con discapacidad.", "La edad promedio de la población activa."], correcta: 1 },
-                    { pregunta: "¿Cuál de estos NO es un dato de Estructura de la Población?", opciones: ["Edad", "Sexo", "Nivel de estudios", "Tasa de Fecundidad"], correcta: 3 },
-                    { pregunta: "¿Qué indicador es necesario para calcular la Tasa de Crecimiento Natural?", opciones: ["Solo la migración.", "Las tasas de natalidad y mortalidad.", "Solo la Tasa de Dependencia.", "Solo la población total."], correcta: 1 },
-                    { pregunta: "¿Cuál es la fuente de datos que registra los matrimonios?", opciones: ["El Padrón Municipal.", "El Registro Civil.", "El Censo de Población.", "La Seguridad Social."], correcta: 1 },
-                    { pregunta: "¿Qué indica un 'Índice de Masculinidad' de 105?", opciones: ["Hay 105 mujeres por cada 100 hombres.", "Hay 105 hombres por cada 100 mujeres.", "El total de población es de 105.000 personas.", "La edad media es de 105 años."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Proyecciones Demográficas'?", opciones: ["La descripción de la población pasada.", "Estimaciones sobre la futura estructura y tamaño de la población, basadas en hipótesis de fecundidad, mortalidad y migración.", "El recuento exacto de la población presente.", "El total de migrantes en un año."], correcta: 1 },
-                    { pregunta: "¿Qué impacto tiene un bajo Índice Sintético de Fecundidad (menor a 2.1) en la pirámide de población?", opciones: ["Un ensanchamiento de la base (Pagoda).", "Un estrechamiento de la base (Urna).", "Una base estable (Campana).", "Un aumento de la población activa."], correcta: 1 },
-                    { pregunta: "¿Qué fenómeno puede ralentizar o compensar el envejecimiento demográfico en un país con baja natalidad?", opciones: ["Aumento de la mortalidad.", "Fuerte Inmigración de población joven.", "Aumento de la emigración.", "Disminución de la esperanza de vida."], correcta: 1 },
-                    { pregunta: "¿Cuál es el principal propósito de una 'Tabla de Mortalidad'?", opciones: ["Calcular la Tasa Bruta de Mortalidad.", "Calcular las probabilidades de muerte y supervivencia a diferentes edades y la esperanza de vida.", "Estudiar las causas de muerte.", "Analizar la migración."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Mortalidad Neonatal'?", opciones: ["Las muertes de niños mayores de un año.", "Las muertes que ocurren durante el primer mes de vida.", "Las muertes causadas por accidentes.", "La mortalidad en la adolescencia."], correcta: 1 },
-                    { pregunta: "¿Qué indicador es esencial para calcular la Tasa de Dependencia de Vejez?", opciones: ["Población total.", "Población activa (16-64 años) y población mayor (65+).", "Tasa de Fecundidad.", "Índice de Masculinidad."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Población Inactiva'?", opciones: ["Personas que tienen empleo.", "Personas que están en edad de trabajar pero no buscan empleo.", "Jubilados, estudiantes y personas que se dedican a las labores del hogar (no activos).", "El total de la población en edad laboral."], correcta: 2 },
-                    { pregunta: "¿Qué es la 'Revolución Demográfica'?", opciones: ["Un cambio brusco en la estructura de edad.", "El paso de un régimen demográfico antiguo (alta natalidad/mortalidad) a un régimen moderno (baja natalidad/mortalidad), conocido como Transición Demográfica.", "Un aumento repentino de la esperanza de vida.", "Una disminución de la migración internacional."], correcta: 1 },
-                    { pregunta: "¿Cuál es el impacto principal del fenómeno de 'Urbanización' en la demografía de un país?", opciones: ["Aumento de la natalidad rural.", "Concentración de la población y cambio en los patrones de fecundidad y mortalidad.", "Disminución de la esperanza de vida.", "Envejecimiento de las ciudades."], correcta: 1 },
-                    { pregunta: "¿Qué riesgo se asocia a una Tasa de Migración Neta positiva (mayor inmigración que emigración)?", opciones: ["Disminución de la población activa.", "Aumento de la diversidad cultural y posible presión sobre los servicios públicos a corto plazo.", "Aceleración del envejecimiento demográfico.", "Disminución de la Tasa de Crecimiento Total."], correcta: 1 },
-                    { pregunta: "¿Qué fenómeno contribuye a que la Tasa Bruta de Mortalidad no sea un buen indicador del nivel sanitario de un país?", opciones: ["La alta natalidad.", "La migración.", "La estructura de edad (un país envejecido tendrá TBM alta a pesar de la buena sanidad).", "La baja esperanza de vida."], correcta: 2 },
-                    { pregunta: "¿Qué se entiende por 'Tasa de Mortalidad por Causa Específica'?", opciones: ["El total de muertes en un año.", "El número de muertes por una enfermedad o lesión concreta por cada 100.000 habitantes.", "La Tasa Bruta de Mortalidad.", "La Tasa de Mortalidad Infantil."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Mediana de Edad'?", opciones: ["El promedio de edad de la población.", "La edad que divide a la población en dos grupos iguales (50% más joven y 50% más viejo).", "La edad a la que la Tasa de Mortalidad es mínima.", "La edad más frecuente."], correcta: 1 },
-                    { pregunta: "¿Cuál es un factor que contribuye a la alta fecundidad en los países en desarrollo (Etapa 2 de la Transición)?", opciones: ["Alta educación de la mujer.", "Necesidad de mano de obra infantil, falta de acceso a métodos anticonceptivos y baja escolarización.", "Baja mortalidad infantil.", "Alto coste de la crianza."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Reemplazo Generacional'?", opciones: ["Que la esperanza de vida es alta.", "El nivel de fecundidad (TGF) necesario para que una generación se reemplace a sí misma (aproximadamente 2.1 hijos por mujer).", "Que la población activa es muy numerosa.", "La Tasa Bruta de Natalidad."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Mortalidad Materna'?", opciones: ["Las muertes de mujeres por cualquier causa.", "Las muertes de mujeres durante el embarazo, parto o puerperio (42 días después) por causas relacionadas con estos procesos.", "Las muertes de madres solteras.", "El total de muertes de mujeres en edad fértil."], correcta: 1 },
-                    { pregunta: "¿Cuál de estos NO es un tipo de migración?", opciones: ["Interna", "Externa", "Vegetativa", "Estacional"], correcta: 2 },
-                    { pregunta: "¿Qué se entiende por 'Transición Epidemiológica'?", opciones: ["El cambio de patrones de morbilidad y mortalidad, de enfermedades infecciosas a enfermedades crónicas y degenerativas.", "El paso de altas a bajas tasas de natalidad.", "La migración masiva de población.", "El envejecimiento de la población."], correcta: 0 },
-                    { pregunta: "¿Qué indicador demográfico se utiliza para calcular el 'Índice de Envejecimiento'?", opciones: ["La Tasa Bruta de Mortalidad.", "La población de 65+ años y la población de 0-14 años.", "La Tasa de Fecundidad.", "La Tasa de Crecimiento Total."], correcta: 1 },
-                    { pregunta: "¿Qué representa el estrechamiento de la base de una pirámide de población?", opciones: ["Aumento de la esperanza de vida.", "Disminución de la natalidad.", "Aumento de la mortalidad infantil.", "Alta inmigración."], correcta: 1 },
-                    { pregunta: "¿Cuál es el principal impacto del 'Dividendo Demográfico'?", opciones: ["Falta de mano de obra.", "Oportunidad de crecimiento económico debido a la gran proporción de población activa.", "Aumento de la dependencia de vejez.", "Disminución de la inversión en educación."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Envejecimiento en la Base' de la pirámide?", opciones: ["La población más joven es cada vez más numerosa.", "La población en edad activa disminuye.", "La base se estrecha debido a la disminución de la natalidad.", "El aumento de la población de 85+ años."], correcta: 2 },
-                    { pregunta: "¿Qué se entiende por 'Registro Civil'?", opciones: ["Una encuesta por muestreo de la población.", "Un registro público donde se inscriben los hechos relativos al estado civil de las personas (nacimientos, defunciones, etc.).", "Una base de datos de personas con derecho a voto.", "El registro de la población activa."], correcta: 1 },
-                    { pregunta: "¿Qué mide la 'Razón de Prevalencia de la Invalidez'?", opciones: ["La mortalidad por discapacidad.", "El número de personas con discapacidad en relación a la población total.", "La tasa de fecundidad.", "La edad media de la población."], correcta: 1 },
-                    { pregunta: "¿Qué factor social contribuye a la disminución de la Tasa Global de Fecundidad en los países desarrollados?", opciones: ["Mayor mortalidad infantil.", "Mayor emigración.", "Incorporación de la mujer al mercado laboral y aumento de su nivel educativo.", "Disminución de la esperanza de vida."], correcta: 2 },
-                    { pregunta: "¿Qué se entiende por 'Crecimiento Cero' de la población?", opciones: ["Crecimiento negativo.", "Tasa de Crecimiento Total (Natural + Migratorio) igual a cero.", "Crecimiento muy rápido.", "Crecimiento solo por migración."], correcta: 1 },
-                    { pregunta: "¿Qué es la 'Razón de Dependencia'?", opciones: ["El porcentaje de personas activas en la población.", "La relación entre la población dependiente (niños y mayores) y la población en edad productiva (activa).", "La tasa de migración.", "El total de la población de un país."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Natalidad'?", opciones: ["El estudio de las muertes.", "El fenómeno demográfico de los nacimientos y su frecuencia.", "La migración.", "El envejecimiento."], correcta: 1 },
-                    { pregunta: "¿Qué se entiende por 'Población Residente' en demografía?", opciones: ["La población que solo está de paso.", "La población que tiene su residencia habitual en un área determinada.", "La población que trabaja pero no vive en el área.", "La población turista."], correcta: 1 }
+                    // I. Demografía General y Funciones
+                    {
+                        pregunta: "Según Naciones Unidas, ¿cuál es el objeto de estudio de la Ciencia de la Demografía?",
+                        opciones: ["El estudio de las poblaciones humanas y que trata de su dimensión, estructura, evolución y caracteres generales, considerados desde un punto de vista cuantitativo.", "La recopilación de datos culturales y económicos para el censo electoral.", "El análisis de los procesos sociales que motivan los movimientos migratorios.", "El cálculo de la Tasa de Mortalidad Infantil a nivel mundial."],
+                        correcta: 0 // Índice de la respuesta correcta: A
+                    },
+                    {
+                        pregunta: "¿Cuál es el objetivo doble de la demografía?",
+                        opciones: ["Analizar las causas de muerte violenta y calcular la esperanza de vida.", "Recoger datos de natalidad y mortalidad para el Registro Civil.", "Determinar cuántos son, dónde están y qué características tienen los individuos, y establecer cómo y por qué evolucionan las poblaciones en el tiempo.", "Elaborar el Padrón Municipal y determinar la densidad de población."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Para qué es fundamental la demografía en la planificación sanitaria?",
+                        opciones: ["Para medir únicamente el Índice de Swaroop-Uemura.", "Para conocer el número y las características de la población, prever sus necesidades de salud y adaptar los recursos disponibles.", "Para asegurar la clasificación de las defunciones únicamente según el Boletín Judicial.", "Para elaborar el Censo de población cada 10 años."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "La demografía permite calcular tasas e indicadores sanitarios que permiten hacer un... ¿de qué en la población?",
+                        opciones: ["Análisis económico y social de las migraciones.", "Diagnóstico de salud.", "Estudio de las leyes que explican los cambios poblacionales.", "Censo electoral detallado."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál de estas es una función principal de la demografía en salud pública?",
+                        opciones: ["Garantizar el secreto de la información recogida en el Padrón.", "Aportar información administrativa para constatar residencia.", "Facilitar la recogida de información epidemiológica para conocer cómo evolucionan las enfermedades.", "Emitir el Boletín Judicial de Defunción en casos de causas no naturales."],
+                        correcta: 2 // C
+                    },
+
+                    // II. Demografía Estática
+                    {
+                        pregunta: "¿Qué permite obtener la Demografía Estática?",
+                        opciones: ["Las leyes que explican los cambios en la población a lo largo del tiempo.", "La Razón de Mortalidad Estandarizada (RME).", "Una imagen fija o “fotografía” de la población en un momento concreto.", "El Movimiento Natural de la Población."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál de las siguientes variables permite conocer la Demografía Estática en el apartado 'Quiénes son'?",
+                        opciones: ["La esperanza de vida al nacimiento.", "El saldo migratorio anual.", "La fecundidad de la mujer.", "Las causas fundamentales de muerte."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuáles son las dos principales fuentes de información que utiliza la Demografía Estática?",
+                        opciones: ["El Registro Civil y el Movimiento Natural de la Población.", "El Censo y el Padrón.", "Las Tablas de Mortalidad y los APVP.", "El INE y el Ministerio de Justicia."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué recoge, analiza y publica el Censo?",
+                        opciones: ["Únicamente el nombre, apellidos y NIF de los residentes.", "Los datos de las viviendas y edificios, pero no de los habitantes.", "Los datos demográficos, culturales, económicos y sociales de todos los habitantes de un país en un momento dado.", "Las altas, bajas y modificaciones de residencia de forma continua."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Con qué periodicidad se realiza el Censo en España, según las fuentes?",
+                        opciones: ["Continuamente, a fecha 1 de enero de cada año.", "Cada 10 años desde 1900.", "Cada 5 años junto al Padrón Municipal.", "De manera irregular, según las necesidades del INE."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿A partir de qué año se realiza el Censo en España junto con el censo de viviendas y edificios?",
+                        opciones: ["1900.", "2001.", "2023.", "1950."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál de las siguientes es una característica del Censo?",
+                        opciones: ["Administrativo.", "Secreto.", "Continuo.", "Parcial (no incluye a todos los residentes)."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué tipo de información sobre las personas recoge el Censo?",
+                        opciones: ["El medio habitual de transporte.", "Los estudios.", "El domicilio (solo el Padrón recoge nombre y domicilio).", "Las causas en cadena de las defunciones."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué tipo de registro es el padrón municipal y qué entidad lo elabora?",
+                        opciones: ["Es un registro secreto elaborado por el INE.", "Es un registro administrativo elaborado por los ayuntamientos.", "Es un registro estadístico elaborado por el Estado.", "Es un registro judicial elaborado por el Ministerio de Justicia."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál de estas es una finalidad principal del Padrón?",
+                        opciones: ["Aportar información demográfica y social.", "Elaborar el censo electoral (derecho a voto).", "Recoger la información de manera secreta.", "Analizar la evolución de la población a lo largo del tiempo."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "Al igual que el censo, ¿qué tres características posee el padrón?",
+                        opciones: ["Secreto, estadístico y simultáneo.", "Universal, individualizado y obligatorio.", "Administrativo, continuo y anual.", "Judicial, económico y cultural."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "Respecto a la periodicidad de actualización, ¿cuál es la diferencia clave entre el Censo y el Padrón?",
+                        opciones: ["El Censo se realiza cada 10 años, mientras que el Padrón se actualiza continuamente.", "El Censo se actualiza anualmente y el Padrón cada 10 años.", "El Censo es continuo y el Padrón se registra simultáneamente.", "El Padrón se publica mensualmente, el Censo solo una vez al año."],
+                        correcta: 0 // A
+                    },
+                    {
+                        pregunta: "¿Cuál de las dos fuentes (Censo o Padrón) no es secreto?",
+                        opciones: ["El Censo, ya que se publica con fines estadísticos.", "El Padrón Municipal.", "Ambos son totalmente secretos por ley.", "El Registro Civil, por depender de Justicia."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál es la función principal del Censo, según la tabla de diferencias?",
+                        opciones: ["Administrativa: constatar residencia.", "Administrativa: determinar necesidades de servicios.", "Estadística: aportar información demográfica y social.", "Estadística: elaborar censos electorales."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Qué entidad realiza el Padrón?",
+                        opciones: ["El Estado a través del INE.", "Los Ayuntamientos.", "El Ministerio de Justicia.", "El Ministerio de Sanidad."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué dato recoge el Padrón Municipal?",
+                        opciones: ["Características básicas de la vivienda.", "Nombre-apellidos-NIF.", "Medio habitual de transporte.", "Todas las anteriores."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál es la gráfica más utilizada para la expresión y análisis de datos en demografía estática?",
+                        opciones: ["El diagrama de dispersión.", "El gráfico de barras.", "La pirámide de población.", "La tabla de mortalidad."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "En la pirámide de población, ¿cómo se divide el sexo?",
+                        opciones: ["Mujeres a la izquierda, hombres a la derecha.", "Hombres a la izquierda, mujeres a la derecha.", "El sexo se representa en el eje vertical.", "El sexo no se representa en la pirámide, solo la edad."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "La pirámide tipo (base ancha que disminuye rápido) se asocia a:",
+                        opciones: ["Poblaciones estacionarias.", "Poblaciones regresivas y envejecidas.", "Poblaciones jóvenes con alta natalidad, propias de países en desarrollo.", "Poblaciones con saldo vegetativo negativo."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿A qué tipo de población corresponde una pirámide tipo (base intermedia y reducción lenta)?",
+                        opciones: ["Poblaciones jóvenes.", "Poblaciones que se mantienen en la misma estructura.", "Poblaciones regresivas.", "Poblaciones estacionarias que comienzan a envejecer."],
+                        correcta: 3 // D
+                    },
+                    {
+                        pregunta: "La pirámide tipo (base estrecha, ensanchamiento intermedio y disminución lenta) se asocia a:",
+                        opciones: ["Países con muy alta Tasa Bruta de Natalidad.", "Países en vías de desarrollo.", "Poblaciones regresivas y envejecidas.", "Poblaciones con alta Tasa de Mortalidad Infantil."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "Además de las pirámides, ¿qué dos índices específicos se utilizan para el análisis de datos en demografía estática?",
+                        opciones: ["Índice de Swaroop-Uemura y Esperanza de Vida.", "Índice de Fecundidad General e ISF.", "Índice de Frinz e Índice de Sundbarg.", "Razón de Mortalidad Estandarizada y APVP."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Qué proporción de individuos mide el Índice de Frinz?",
+                        opciones: ["La población de 0-15 años en relación con la de 15-50 años.", "La población de 0-20 años en relación con el grupo de referencia de 30-50 años.", "La población de +50 años en relación con el grupo de 15-50 años.", "La población total respecto al número de nacidos vivos."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cómo se calcula el Índice de Frinz?",
+                        opciones: ["Dividiendo el total de individuos de 30-50 años entre el total de personas de 0-20 años.", "Dividiendo el total de individuos de 0-20 años entre el total de personas de 30-50 años, y se multiplica por cien.", "Dividiendo la población menor de 15 años entre la población mayor de 50 años.", "Dividiendo la población de 15-50 años entre la población total."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "En el Índice de Sundbarg, ¿cuál es el grupo de edad que se toma como referencia para el cálculo de proporciones?",
+                        opciones: ["0 a 15 años.", "15 a 50 años.", "Mayores de 50 años.", "30 a 50 años."],
+                        correcta: 1 // B
+                    },
+
+                    // III. Demografía Dinámica e Indicadores
+                    {
+                        pregunta: "¿Cuál es el objetivo principal de la Demografía Dinámica?",
+                        opciones: ["Obtener una 'fotografía' fija de la población.", "Analizar los cambios en la población a lo largo del tiempo y establecer las leyes que explican dichos cambios.", "Elaborar el Padrón Municipal de forma continua.", "Recoger datos económicos y culturales de todos los habitantes."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué entidad elabora el Movimiento Natural de la Población Española a partir de los datos que recibe mensualmente?",
+                        opciones: ["El Ministerio de Justicia.", "El Registro Civil.", "El INE.", "Los Ayuntamientos."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Qué datos registrados por el Registro Civil son relevantes para la demografía dinámica?",
+                        opciones: ["Domicilio y nivel académico.", "Nacimientos, filiación, matrimonios y defunciones.", "Tipo de tenencia de la vivienda.", "Situación económica y actividad laboral."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿De qué ministerio depende el Registro Civil?",
+                        opciones: ["Ministerio de Justicia.", "Ministerio de Sanidad.", "Ministerio del Interior.", "Ministerio de Economía."],
+                        correcta: 0 // A
+                    },
+                    {
+                        pregunta: "El Certificado médico de defunción / Boletín estadístico de defunción incluye las causas de muerte en cadena. ¿Cuáles son?",
+                        opciones: ["Causa judicial y causa accidental.", "Causa principal, secundaria y terciaria.", "Causa fundamental, intermedia y contribuyentes.", "Causa violenta y causa natural."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Quién emite el Boletín judicial de defunción, utilizado para fallecidos por causas no naturales (accidentes, homicidios, suicidios, etc.)?",
+                        opciones: ["El médico de asistencia.", "El juzgado.", "El INE.", "El Registro Civil."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué clasificación se utiliza para codificar todas las causas de muerte?",
+                        opciones: ["El Índice de Frinz.", "La CIE-10 (Clasificación Internacional de Enfermedades).", "El Índice de Swaroop-Uemura.", "El Padrón Municipal."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál es una de las tres principales áreas de estudio de la Demografía Dinámica?",
+                        opciones: ["Sexo y Edad.", "Movimientos migratorios.", "Estructura de la población.", "Nivel de instrucción."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál es la definición de la Tasa Bruta de Natalidad?",
+                        opciones: ["Número medio de hijos por mujer.", "Número de nacidos vivos en relación con la población total.", "Muertes de menores de 1 año.", "Nacidos vivos por cada 1000 mujeres fértiles."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Según la clasificación de las fuentes, cuándo se considera que una Tasa Bruta de Natalidad es Alta (en ‰)?",
+                        opciones: ["< 15 ‰.", "15 – 30 ‰.", "> 30 ‰.", "6,61 ‰."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál fue la Tasa Bruta de Natalidad de España en 2023?",
+                        opciones: ["36 ‰.", "9,7 ‰.", "6,61 ‰.", "1,12 hijos por mujer."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cómo se calcula el Índice de Fecundidad General?",
+                        opciones: ["Defunciones / Población total.", "Nacidos vivos / mujeres fértiles (15-49 años).", "Saldo migratorio / 1000 habitantes.", "Población de 0-20 años / Población de 30-50 años."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál es el valor del Índice Sintético de Fecundidad (ISF) que marca el reemplazo generacional?",
+                        opciones: ["1,5 hijos/mujer.", "≥ 2,1 hijos/mujer.", "1,12 hijos/mujer.", "31,7 años."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué indica el ISF de España en 2023 (1,12 hijos por mujer)?",
+                        opciones: ["Que está ligeramente por debajo del reemplazo.", "Que se ha alcanzado el nivel de reemplazo.", "Que está muy por debajo del nivel de reemplazo.", "Que es comparable a la tasa de Nigeria."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál es un factor sociodemográfico que influye en la natalidad y fecundidad?",
+                        opciones: ["Lactancia.", "Nupcialidad.", "Anticoncepción.", "Salarios."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuáles son los límites interpretativos (en ‰) para considerar una Tasa Bruta de Mortalidad como Baja?",
+                        opciones: ["> 15 ‰.", "10 – 15 ‰.", "< 10 ‰.", "9,1 ‰."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "La Tasa Bruta de Mortalidad de España en 2023 fue de aproximadamente 9,1 ‰. ¿A qué categoría pertenece?",
+                        opciones: ["Alta.", "Baja-media.", "Muy baja.", "Media."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué mide el Índice de Swaroop-Uemura?",
+                        opciones: ["La proporción de individuos de 0-20 años.", "El número medio de hijos por mujer.", "El porcentaje de fallecimientos en edades > 50 años respecto del total de muertes.", "La esperanza de vida ajustada por la calidad de vida."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál es la definición de la Tasa de Mortalidad Infantil (TMI)?",
+                        opciones: ["Muertes de menores de 1 año por cada 1000 nacidos vivos.", "Muertes de menores de 7 días por cada 1000 habitantes.", "Muertes por malformaciones congénitas.", "Defunciones de menores de 5 años."],
+                        correcta: 0 // A
+                    },
+                    {
+                        pregunta: "¿Según la clasificación, cuándo se considera que una Tasa de Mortalidad Infantil es Alta (en ‰)?",
+                        opciones: ["< 20 ‰.", "20 – 50 ‰.", "> 50 ‰.", "2,59 ‰."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Qué periodo abarca la Mortalidad Perinatal?",
+                        opciones: ["Desde la semana 28 de gestación hasta 7 días post-natal.", "0 a 7 días post-natal.", "7 a 28 días post-natal.", "28 días a 1 año."],
+                        correcta: 0 // A
+                    },
+                    {
+                        pregunta: "¿Qué periodo abarca la Mortalidad Neonatal Tardía?",
+                        opciones: ["0 a 7 días.", "7 a 28 días.", "28 días a 1 año.", "Muerte fetal."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué periodo abarca la Mortalidad Post-neonatal?",
+                        opciones: ["0 a 7 días.", "Muerte fetal desde semana 28.", "28 días a 1 año.", "7 a 28 días."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál fue la Tasa de Mortalidad al nacimiento (específica) en España en 2023?",
+                        opciones: ["9,1 ‰.", "2,59 ‰.", "69 ‰.", "50 ‰."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué indicador sintético se obtiene a partir de las tablas de mortalidad?",
+                        opciones: ["La Tasa Neta de Migración.", "La Esperanza de Vida.", "El Índice de Frinz.", "El Índice Sintético de Fecundidad."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "Según los datos de 2023 en España, ¿cuál fue la Esperanza de Vida al nacimiento?",
+                        opciones: ["54 años.", "83,77 años (81,11 hombres / 86,34 mujeres).", "70 años.", "86,34 años para hombres y 81,11 años para mujeres."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué es la Mortalidad Evitable (MIPSE)?",
+                        opciones: ["Defunciones que ocurren después de los 70 años.", "Defunciones que podrían haberse evitado con medidas de prevención, diagnóstico precoz o tratamientos adecuados.", "Las muertes prematuras en menores de 70 años.", "Muertes causadas por accidentes, homicidios o suicidios."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué miden los Años Potenciales de Vida Perdidos (APVP)?",
+                        opciones: ["La Esperanza de Vida al nacimiento.", "El número de años de vida que se pierden cuando una persona fallece antes de los 70 años.", "El porcentaje de muertes mayores de 50 años.", "La Razón de Mortalidad Estandarizada."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Con respecto a qué edad se miden las muertes prematuras en el cálculo de los APVP?",
+                        opciones: ["65 años.", "70 años.", "50 años.", "83 años."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "Si la Razón de Mortalidad Estandarizada (RME) en una población es de 160, ¿qué indica?",
+                        opciones: ["Que la población presenta un 160% más de muertes de las esperadas.", "Que la población presenta un 60% más de muertes de las esperadas.", "Que la población presenta un 60% menos de muertes de las esperadas.", "Que el valor esperado de muertes era 160."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "Si una persona fallece a los 30 años, ¿cuántos APVP se consideran perdidos?",
+                        opciones: ["30 años.", "70 años.", "Casi 40 años.", "100 años."],
+                        correcta: 2 // C (40 años)
+                    },
+                    {
+                        pregunta: "A diferencia de natalidad y mortalidad (fenómenos biológicos), ¿qué son las migraciones?",
+                        opciones: ["Fenómenos demográficos intrínsecos al crecimiento vegetativo.", "Procesos sociales motivados por condiciones de vida.", "Procesos biológicos motivados por la edad.", "Variables estáticas del Censo."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál de las siguientes condiciones de vida puede motivar las migraciones, según la fuente?",
+                        opciones: ["Desastres naturales.", "La emancipación de la mujer.", "La maternidad tardía.", "El aumento del ISF."],
+                        correcta: 0 // A
+                    },
+                    {
+                        pregunta: "¿Cómo se calcula la Tasa Neta de Migración?",
+                        opciones: ["Saldo migratorio / 1000 habitantes.", "Nacimientos - Defunciones / Población total.", "Defunciones de menores de 1 año / Nacidos vivos.", "Muertes prematuras / 70 años."],
+                        correcta: 0 // A
+                    },
+                    {
+                        pregunta: "¿Cuál es el límite (en ‰) para considerar una Tasa Neta de Migración como Positiva Alta?",
+                        opciones: ["−1 a +1 ‰.", "< −1 ‰.", "+1 a +9 ‰.", "> +10 ‰."],
+                        correcta: 3 // D
+                    },
+                    {
+                        pregunta: "¿Cuál es la fórmula para calcular la Tasa de Crecimiento Demográfico?",
+                        opciones: ["(Nacimientos + Defunciones) – Saldo migratorio.", "(Nacimientos + Saldo migratorio) – Defunciones.", "(Población 0-15) + (Población +50).", "Defunciones por cada 1000 habitantes."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "En 2023, ¿por qué presentó España un saldo vegetativo negativo?",
+                        opciones: ["Porque el saldo migratorio fue positivo.", "Porque los nacimientos superaron a las defunciones.", "Porque las defunciones superaron los nacimientos.", "Porque el ISF fue de 1,12 hijos por mujer."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál es la Tasa de Natalidad de Nigeria en 2023 y a qué se atribuye su cifra alta?",
+                        opciones: ["6,6 ‰, debido a la maternidad tardía.", "9,1 ‰, debido al envejecimiento.", "36 ‰, debido a la baja disponibilidad de anticoncepción y matrimonio precoz.", "2,6 ‰, debido a un alto nivel sanitario."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál es una consecuencia de la baja natalidad en España (6,6 ‰ en 2023)?",
+                        opciones: ["Población joven y presión sobre servicios educativos.", "Crecimiento poblacional rápido.", "Envejecimiento poblacional y necesidad de inmigración para sostener la fuerza laboral.", "Reducción del gasto sanitario."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál fue el ISF de India en 2023, y cómo se explica que sea ligeramente inferior al reemplazo (2,1)?",
+                        opciones: ["1,12 hijos por mujer, relacionado con el coste de crianza.", "2,0 hijos por mujer, influida por desigual acceso a anticoncepción y diferencias rurales-urbanas.", "6,61 ‰, debido a una alta mortalidad infantil.", "2,6 ‰, debido a un buen control sanitario."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Cuál es una consecuencia del ISF de India (2,0 hijos por mujer) en relación con los servicios?",
+                        opciones: ["Déficit de reemplazo poblacional.", "La población está todavía joven, pero con riesgo de sobrecarga de servicios sanitarios y educativos.", "Envejecimiento poblacional severo.", "Disminución de la esperanza de vida."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "En España (2023), ¿cuál es el motivo de que la mortalidad bruta (9,1 ‰) esté en aumento?",
+                        opciones: ["El aumento de muertes por conflictos.", "El envejecimiento poblacional.", "La persistencia de enfermedades transmisibles.", "La alta tasa de mortalidad infantil."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿Qué explica la alta mortalidad bruta de Afganistán (12,8 ‰)?",
+                        opciones: ["El envejecimiento poblacional y el enfoque en enfermedades crónicas.", "Dietas inadecuadas y sedentarismo.", "Conflictos, pobreza, infecciones y problemas de acceso sanitario.", "Una Razón de Mortalidad Estandarizada muy baja."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuáles son las dos principales causas de las muertes infantiles en España (TMI baja, 2,6 ‰)?",
+                        opciones: ["Infecciones respiratorias y diarreas.", "Complicaciones en el parto y falta de agua potable.", "Malformaciones congénitas graves o complicaciones perinatales.", "Malaria y homicidios."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál es una causa de la TMI muy alta en Nigeria (69 ‰)?",
+                        opciones: ["Controles prenatales y atención hospitalaria avanzada.", "Escasa cobertura vacunal y falta de acceso a agua potable.", "Un ISF bajo.", "La dieta mediterránea."],
+                        correcta: 1 // B
+                    },
+                    {
+                        pregunta: "¿A qué se atribuye la Esperanza de Vida muy baja en Chad (54 años)?",
+                        opciones: ["Saldo migratorio positivo y sistema sanitario universal.", "Dieta mediterránea y control de enfermedades infecciosas.", "Mortalidad infantil elevada, alta carga de infecciones y conflictos armados.", "Baja mortalidad en adultos mayores de 80 años."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál es el impacto de la inmigración en España (saldo positivo ~500.000 en 2023)?",
+                        opciones: ["Fuga de capital humano.", "Presión sobre los sistemas sanitarios de países vecinos.", "Rejuvenece la pirámide poblacional y sostiene la fuerza laboral.", "Acelera el déficit de reemplazo poblacional."],
+                        correcta: 2 // C
+                    },
+                    {
+                        pregunta: "¿Cuál fue el impacto de la migración en Venezuela en 2023, donde se registró un saldo negativo?",
+                        opciones: ["Control de enfermedades infecciosas y aumento de la esperanza de vida.", "Fuga de capital humano y presión sobre sistemas sanitarios de países receptores.", "Equilibrio entre natalidad y defunciones.", "La migración compensó la baja natalidad."],
+                        correcta: 1 // B
+                    },
                 ],
                 // NUEVO EXAMEN AÑADIDO: EPIDEMIOLOGÍA (UT2)
                 examen_epidemiologia: [
