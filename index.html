@@ -84,13 +84,20 @@
             font-size: 1.4em;
             text-align: center;
         }
+        /* Color para la opción seleccionada correcta */
         .correcto {
-            background-color: #9c27b0;
+            background-color: #9c27b0; 
             color: white;
         }
+        /* Color para la opción seleccionada incorrecta */
         .incorrecto {
             background-color: red;
             color: white;
+        }
+        /* Estilo para resaltar la respuesta correcta cuando el usuario falla */
+        .resaltar-correcta {
+            background-color: #a5d6a7 !important; /* Verde claro */
+            border: 2px solid green;
         }
         .progress-bar {
             width: 100%;
@@ -132,12 +139,13 @@
 </head>
 <body>
     <h4 class="title">1º Higiene Bucodental.</h4>
-    <!-- <label for="examSelector">Selecciona un examen:</label> -->
     <select id="examSelector" aria-label="Seleccionar examen">
         <option value="examen1">1ªEV. Aparato Circulatorio</option>
-        <option value="examen2" selected="selected">2ªEV. Fisiología</option>
-        <option value="examen3" >2ªEV. Sostenibilidad</option>
-
+        <option value="examen2">2ªEV. Fisiopatología</option>
+        <option value="examen3">2ªEV. Sostenibilidad</option>
+        <option value="examen4">3ªEV. Fisiopatología</option>
+        <option value="examen_demografia">Demografía General y Funciones (78 Preguntas)</option> 
+        <option value="examen_epidemiologia" selected="selected">Cuestionario Tipo Test de Epidemiología (UT2) (79 Preguntas)</option>
     </select>
     <button id="startQuiz" aria-label="Comenzar Test">Comenzar Test</button>
     <div class="progress-bar">
@@ -153,1123 +161,423 @@
         $(document).ready(function () {
             let preguntaActual = 0;
             let correctas = 0;
-            let preguntas = []; // Este array almacenará las preguntas del examen seleccionado
+            let preguntas = [];
+
+            // Función de ayuda para barajar un array (Fisher-Yates)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
 
             // Datos de los exámenes integrados en el código
             const examenes = {
+                // EXÁMENES ANTERIORES (CON LA LÓGICA DE ALEATORIZACIÓN DE OPCIONES APLICADA)
                 examen1: [
-                    {
-        pregunta: "¿Cuál de estos NO es un agente físico?",
-        opciones: [
-            "Temperatura",
-            "Electricidad",
-            "Fármacos",
-            "Traumatismos"
-        ],
-        correcta: 2 // Índice de la opción correcta
-    },
-    {
-        pregunta: "¿A qué término hace referencia: 'Es el juicio hipotético acerca de la terminación probable de una enfermedad'?",
-        opciones: [
-            "Diagnóstico",
-            "Pronóstico",
-            "Anamnesis",
-            "Anamnesis"
-        ],
-        correcta: 1
-    },
-    {
-        pregunta: "En la pared del corazón existen 3 capas, ¿Cuál es la más externa?",
-        opciones: [
-            "Pericardio",
-            "Endocardio",
-            "Miocardio",
-            "Venosa"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "En las etapas de la enfermedad, ¿en qué fase hay cambios celulares, tisulares u orgánicos sin que la persona manifieste aún ningún síntoma o signo?",
-        opciones: [
-            "Fase clínica",
-            "Fase pre-patogénica",
-            "Fase patogénica",
-            "Todas son correctas"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "La hipertensión arterial ocurre cuando la presión sanguínea es:",
-        opciones: [
-            "Alta",
-            "Normal",
-            "Baja",
-            "Ninguna es correcta"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "¿En cuál de estas enfermedades el sistema inmunitario ataca a las células del propio organismo?",
-        opciones: [
-            "SIDA",
-            "Neumonía",
-            "Lupus",
-            "Epilepsia",
-            "(opciones: autoinmune, genética, nutricional…)"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Cuál de estos análisis no es clínico?",
-        opciones: [
-            "Inmunología",
-            "Microbiología",
-            "Bioquímica",
-            "Inspección"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Cuáles son los sistemas que están implicados en la actividad eléctrica del corazón?",
-        opciones: [
-            "Nódulo sinusal",
-            "Nódulo mitral",
-            "Nódulo auriculoventricular",
-            "a y c son correctas"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Cuáles son los procesos patológicos fundamentales?",
-        opciones: [
-            "Edema",
-            "Inflamación",
-            "Tumoración",
-            "Todas son correctas"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Qué es la fisioterapia?",
-        opciones: [
-            "Es ir al fisio",
-            "Es una disciplina cuyo objetivo es paliar un síntoma de muerte",
-            "Es una disciplina cuyo objetivo es hacer deporte",
-            "Es una disciplina cuyo objetivo es paliar síntomas de múltiples dolencias, tanto agudas como crónicas, por medio del ejercicio terapéutico, calor, frío, luz, agua, masaje y electricidad."
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Qué es necesario para reparar los tejidos lesionados?",
-        opciones: [
-            "Sangre",
-            "Parche",
-            "Proteínas",
-            "Cicatrización"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Qué son los agentes biológicos?",
-        opciones: [
-            "Son microorganismos capaces de provocar una infección",
-            "Son moléculas capaces de provocar una enfermedad",
-            "Son ácidos y bases con capacidad de provocar una enfermedad",
-            "Todas son correctas"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "¿Cuál de estos es un examen físico?",
-        opciones: [
-            "Elisa",
-            "Radiografía",
-            "Electro",
-            "Auscultación"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Cuál es la válvula que conecta el ventrículo y la aurícula derecha?",
-        opciones: [
-            "Mitral",
-            "Aórtica",
-            "Tricúspide",
-            "Pulmonar"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Cómo se pueden denominar las características del agente según la causa esté en el propio material genético o no?",
-        opciones: [
-            "Intrínseca",
-            "Directa",
-            "De efecto inmediato",
-            "Genética y/o adquirida"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "Es el aumento del tamaño celular por aumento de la masa protoplasmática, con incremento de la función.",
-        opciones: [
-            "Atrofia",
-            "Hipertrofia",
-            "Metaplasia",
-            "Displasia"
-        ],
-        correcta: 1
-    },
-    {
-        pregunta: "Trastorno que persiste después de la curación",
-        opciones: [
-            "Complicación",
-            "Evolución",
-            "Secuela",
-            "Diagnóstico"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "Conjunto de procesos fisiológicos que tienen por objetivo detener una hemorragia.",
-        opciones: [
-            "Volemia",
-            "Retorno venoso",
-            "Tensión arterial",
-            "Hemostasia"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Cuánto dura una enfermedad crónica?",
-        opciones: [
-            "6 meses",
-            "Más de 6 meses",
-            "1 mes",
-            "Ninguna es correcta"
-        ],
-        correcta: 1
-    },
-    {
-        pregunta: "¿Qué es un edema?",
-        opciones: [
-            "Es acumulación de líquido en el espacio celular",
-            "No existe acumulación",
-            "Es una acumulación de líquido en el espacio intercelular o intersticial o en cavidades del organismo",
-            "Todas son correctas"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Se debe a un aumento del número de las células que lo forman (relacionado con los tejidos)?",
-        opciones: [
-            "Hiperplasia o hipertrofia numérica.",
-            "Hipertrofia estricta.",
-            "Necrosis coagulativa.",
-            "Metaplasia"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "¿A qué término hace referencia: 'Es el tratamiento con medicamentos, dispensados a partir de recetas médicas'?",
-        opciones: [
-            "Sueroterapia",
-            "Radioterapia",
-            "Quimioterapia",
-            "Farmacología"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿A qué activa la trombina?",
-        opciones: [
-            "Vitamina K",
-            "Fibrinógeno",
-            "Fibrina",
-            "Protrombina"
-        ],
-        correcta: 1
-    },
-    {
-        pregunta: "¿Cómo se denomina la embolia, la cual ha sido causada por pus y bacterias?",
-        opciones: [
-            "Embolia aérea",
-            "Embolia tisular",
-            "Embolia séptica",
-            "Todas son correctas"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Cómo afectan a la célula los agentes externos?",
-        opciones: [
-            "De forma fisiológica y si no se puede, de forma fisiopatológica",
-            "De forma patogénica y si no se puede, de forma fisiológica",
-            "Se multiplican solamente",
-            "Todas son incorrectas"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "¿Qué tipos de radiografías hay?",
-        opciones: [
-            "Con contraste",
-            "Simples",
-            "Derivadas",
-            "A y B son correctas"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "El circuito menor de la sangre",
-        opciones: [
-            "Se llama también sistémico y lleva la sangre desde el corazón hasta los pulmones",
-            "Se llama también pulmonar y lleva la sangre desde el corazón hasta el resto del organismo",
-            "Se llama también sistémico y lleva la sangre desde el corazón hasta el resto del organismo",
-            "Se llama también pulmonar y lleva la sangre desde el corazón hasta los pulmones"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "Síntomas de un accidente vascular cerebral.",
-        opciones: [
-            "Dificultad para expresarse",
-            "Pérdida de fuerza en pierna o brazo",
-            "Pérdida de visión",
-            "Todas son correctas"
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "Las lesiones celulares pueden ser:",
-        opciones: [
-            "Reversibles.",
-            "Ninguna es correcta",
-            "Irreversibles",
-            "a y c son correctas."
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "¿Cuál de estas son técnicas de electrodiagnóstico?",
-        opciones: [
-            "Electrocardiograma",
-            "Electroencefalograma y electromiografía.",
-            "Endoscopia, resonancia magnética y ecografía.",
-            "a y b son correctas."
-        ],
-        correcta: 3
-    },
-    {
-        pregunta: "Es el estudio de la dinámica de la sangre en el interior de los vasos",
-        opciones: [
-            "Retorno venoso.",
-            "Ciclo cardíaco.",
-            "Hemodinámica",
-            "Coágulos"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "Tipo de enfermedad que presenta longevidad en el tiempo y de carácter degenerativo.",
-        opciones: [
-            "Crónica",
-            "Genética",
-            "Autoinmune",
-            "Mental"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "¿Qué es la arritmia?",
-        opciones: [
-            "Alteraciones en una o varias válvulas del corazón",
-            "Síntomas compatibles con una cardiopatía isquémica",
-            "Presenta un pulso irregular",
-            "Presión sanguínea"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Qué es la isquemia?",
-        opciones: [
-            "Formación de un coágulo",
-            "Dilatación de un vaso sanguíneo",
-            "Reducción de flujo sanguíneo",
-            "Dilatación venosa"
-        ],
-        correcta: 2
-    },
-    {
-        pregunta: "¿Qué es la fibrosis?",
-        opciones: [
-            "Tejido conectivo fibroso",
-            "Tejido cartilaginoso",
-            "Tejido óseo",
-            "Ninguna es correcta"
-        ],
-        correcta: 0
-    },
-    {
-        pregunta: "¿Qué es la nosología?",
-        opciones: [
-            "El estudio de los agentes etiológicos.",
-            "La descripción, diferenciación y clasificación de enfermedades",
-            "La prevención de enfermedades genéticas.",
-            "La investigación de agentes infecciosos"
-        ],
-        correcta: 1
-    },
-    {
-        pregunta: "¿Qué tipo de trombosis ocurre cuando el vaso queda completamente obstruido?",
-        opciones: [
-            "Trombosis mural.",
-            "Trombosis hialina.",
-            "Trombosis ocluyente.",
-            "Trombosis por precipitación."
-        ],
-        correcta: 2
-    }
+                    { pregunta: "¿Cuál de estos NO es un agente físico?", opciones: ["Temperatura", "Electricidad", "Fármacos", "Traumatismos"], correcta: 2 },
+                    { pregunta: "¿A qué término hace referencia: 'Es el juicio hipotético acerca de la terminación probable de una enfermedad'?", opciones: ["Diagnóstico", "Pronóstico", "Anamnesis", "Anamnesis"], correcta: 1 },
+                    { pregunta: "En la pared del corazón existen 3 capas, ¿Cuál es la más externa?", opciones: ["Pericardio", "Endocardio", "Miocardio", "Venosa"], correcta: 0 },
+                    { pregunta: "En las etapas de la enfermedad, ¿en qué fase hay cambios celulares, tisulares u orgánicos sin que la persona manifieste aún ningún síntoma o signo?", opciones: ["Fase clínica", "Fase pre-patogénica", "Fase patogénica", "Todas son correctas"], correcta: 3 },
+                    { pregunta: "La hipertensión arterial ocurre cuando la presión sanguínea es:", opciones: ["Alta", "Normal", "Baja", "Ninguna es correcta"], correcta: 0 },
+                    { pregunta: "¿En cuál de estas enfermedades el sistema inmunitario ataca a las células del propio organismo?", opciones: ["SIDA", "Neumonía", "Lupus", "Epilepsia", "(opciones: autoinmune, genética, nutricional…)"], correcta: 2 },
+                    { pregunta: "¿Cuál de estos análisis no es clínico?", opciones: ["Inmunología", "Microbiología", "Bioquímica", "Inspección"], correcta: 3 },
+                    { pregunta: "¿Cuáles son los sistemas que están implicados en la actividad eléctrica del corazón?", opciones: ["Nódulo sinusal", "Nódulo mitral", "Nódulo auriculoventricular", "a y c son correctas"], correcta: 3 },
+                    { pregunta: "¿Cuáles son los procesos patológicos fundamentales?", opciones: ["Edema", "Inflamación", "Tumoración", "Todas son correctas"], correcta: 3 },
+                    { pregunta: "¿Qué es la fisioterapia?", opciones: ["Es ir al fisio", "Es una disciplina cuyo objetivo es paliar un síntoma de muerte", "Es una disciplina cuyo objetivo es hacer deporte", "Es una disciplina cuyo objetivo es paliar síntomas de múltiples dolencias, tanto agudas como crónicas, por medio del ejercicio terapéutico, calor, frío, luz, agua, masaje y electricidad."], correcta: 3 },
+                    { pregunta: "¿Qué es necesario para reparar los tejidos lesionados?", opciones: ["Sangre", "Parche", "Proteínas", "Cicatrización"], correcta: 3 },
+                    { pregunta: "¿Qué son los agentes biológicos?", opciones: ["Son microorganismos capaces de provocar una infección", "Son moléculas capaces de provocar una enfermedad", "Son ácidos y bases con capacidad de provocar una enfermedad", "Todas son correctas"], correcta: 0 },
+                    { pregunta: "¿Cuál de estos es un examen físico?", opciones: ["Elisa", "Radiografía", "Electro", "Auscultación"], correcta: 3 },
+                    { pregunta: "¿Cuál es la válvula que conecta el ventrículo y la aurícula derecha?", opciones: ["Mitral", "Aórtica", "Tricúspide", "Pulmonar"], correcta: 2 },
+                    { pregunta: "¿Cómo se pueden denominar las características del agente según la causa esté en el propio material genético o no?", opciones: ["Intrínseca", "Directa", "De efecto inmediato", "Genética y/o adquirida"], correcta: 3 },
+                    { pregunta: "Es el aumento del tamaño celular por aumento de la masa protoplasmática, con incremento de la función.", opciones: ["Atrofia", "Hipertrofia", "Metaplasia", "Displasia"], correcta: 1 },
+                    { pregunta: "Trastorno que persiste después de la curación", opciones: ["Complicación", "Evolución", "Secuela", "Diagnóstico"], correcta: 2 },
+                    { pregunta: "Conjunto de procesos fisiológicos que tienen por objetivo detener una hemorragia.", opciones: ["Volemia", "Retorno venoso", "Tensión arterial", "Hemostasia"], correcta: 3 },
+                    { pregunta: "¿Cuánto dura una enfermedad crónica?", opciones: ["6 meses", "Más de 6 meses", "1 mes", "Ninguna es correcta"], correcta: 1 },
+                    { pregunta: "¿Qué es un edema?", opciones: ["Es acumulación de líquido en el espacio celular", "No existe acumulación", "Es una acumulación de líquido en el espacio intercelular o intersticial o en cavidades del organismo", "Todas son correctas"], correcta: 2 },
+                    { pregunta: "¿Se debe a un aumento del número de las células que lo forman (relacionado con los tejidos)?", opciones: ["Hiperplasia o hipertrofia numérica.", "Hipertrofia estricta.", "Necrosis coagulativa.", "Metaplasia"], correcta: 0 },
+                    { pregunta: "¿A qué término hace referencia: 'Es el tratamiento con medicamentos, dispensados a partir de recetas médicas'?", opciones: ["Sueroterapia", "Radioterapia", "Quimioterapia", "Farmacología"], correcta: 3 },
+                    { pregunta: "¿A qué activa la trombina?", opciones: ["Vitamina K", "Fibrinógeno", "Fibrina", "Protrombina"], correcta: 1 },
+                    { pregunta: "¿Cómo se denomina la embolia, la cual ha sido causada por pus y bacterias?", opciones: ["Embolia aérea", "Embolia tisular", "Embolia séptica", "Todas son correctas"], correcta: 2 },
+                    { pregunta: "¿Cómo afectan a la célula los agentes externos?", opciones: ["De forma fisiológica y si no se puede, de forma fisiopatológica", "De forma patogénica y si no se puede, de forma fisiológica", "Se multiplican solamente", "Todas son incorrectas"], correcta: 0 },
+                    { pregunta: "¿Qué tipos de radiografías hay?", opciones: ["Con contraste", "Simples", "Derivadas", "A y B son correctas"], correcta: 3 },
+                    { pregunta: "El circuito menor de la sangre", opciones: ["Se llama también sistémico y lleva la sangre desde el corazón hasta los pulmones", "Se llama también pulmonar y lleva la sangre desde el corazón hasta el resto del organismo", "Se llama también sistémico y lleva la sangre desde el corazón hasta el resto del organismo", "Se llama también pulmonar y lleva la sangre desde el corazón hasta los pulmones"], correcta: 3 },
+                    { pregunta: "Síntomas de un accidente vascular cerebral.", opciones: ["Dificultad para expresarse", "Pérdida de fuerza en pierna o brazo", "Pérdida de visión", "Todas son correctas"], correcta: 3 },
+                    { pregunta: "Las lesiones celulares pueden ser:", opciones: ["Reversibles.", "Ninguna es correcta", "Irreversibles", "a y c son correctas."], correcta: 3 },
+                    { pregunta: "¿Cuál de estas son técnicas de electrodiagnóstico?", opciones: ["Electrocardiograma", "Electroencefalograma y electromiografía.", "Endoscopia, resonancia magnética y ecografía.", "a y b son correctas."], correcta: 3 },
+                    { pregunta: "Es el estudio de la dinámica de la sangre en el interior de los vasos", opciones: ["Retorno venoso.", "Ciclo cardíaco.", "Hemodinámica", "Coágulos"], correcta: 2 },
+                    { pregunta: "Tipo de enfermedad que presenta longevidad en el tiempo y de carácter degenerativo.", opciones: ["Crónica", "Genética", "Autoinmune", "Mental"], correcta: 0 },
+                    { pregunta: "¿Qué es la arritmia?", opciones: ["Alteraciones en una o varias válvulas del corazón", "Síntomas compatibles con una cardiopatía isquémica", "Presenta un pulso irregular", "Presión sanguínea"], correcta: 2 },
+                    { pregunta: "¿Qué es la isquemia?", opciones: ["Formación de un coágulo", "Dilatación de un vaso sanguíneo", "Reducción de flujo sanguíneo", "Dilatación venosa"], correcta: 2 },
+                    { pregunta: "¿Qué es la fibrosis?", opciones: ["Tejido conectivo fibroso", "Tejido cartilaginoso", "Tejido óseo", "Ninguna es correcta"], correcta: 0 },
+                    { pregunta: "¿Qué es la nosología?", opciones: ["El estudio de los agentes etiológicos.", "La descripción, diferenciación y clasificación de enfermedades", "La prevención de enfermedades genéticas.", "La investigación de agentes infecciosos"], correcta: 1 },
+                    { pregunta: "¿Qué tipo de trombosis ocurre cuando el vaso queda completamente obstruido?", opciones: ["Trombosis mural.", "Trombosis hialina.", "Trombosis ocluyente.", "Trombosis por precipitación."], correcta: 2 }
                 ],
                 examen2: [
-                    {
-                        pregunta: "En las vías nasales superiores o altas están formados por:",
-                        opciones: [
-                            "Fosas nasales, faringe y laringe.",
-                            "Fosas nasales, traquea y laringe.",
-                            "Faringe, Laringe y Bronquios.",
-                            "Todas son correctas."
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "Sobre la Tráquea, señala la CORRECTA.",
-                        opciones: [
-                            "Conecta la faringe con la laringe.",
-                            "Conecta la laringe con los bronquios.",
-                            "Los cartílagos tienen forma de C para permitir la distensión del esófago durante la deglución.",
-                            "B y C son correctas"
-                        ],
-                        correcta: 4
-                    },
-                    {
-                        pregunta: "¿Que tipo de lípido NO aumenta el colesterol y protegen las arterias y venas?",
-                        opciones: [
-                            "Lípidos Saturados o grasas",
-                            "Lípidos complejos.",
-                            "Lípidos Polisacaridos",
-                            "Lípidos Monoinsaturados o aceites"
-                        ],
-                        correcta: 4
-                    },
-
-                    {
-                        pregunta: "¿Cuál de estas no es una función de la entrada del aire por las fosas nasales?",
-                        opciones: [
-                            "Conducción del aire",
-                            "Protección",
-                            "Respiración celular",
-                            "Ninguna de las anteriores lo es"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "Sobre los volúmenes respiratorios ¿cuál es aquel que no se puede exhalar?",
-                        opciones: [
-                            "Volumen corriente",
-                            "Volumen residual",
-                            "Volumen de reserva inspiratorio",
-                            "Volumen de reserva espiratorio"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "Las vitaminas hidrosolubles son…",
-                        opciones: [
-                            "Las que no se almacenan en el organismo",
-                            "Las vitaminas A, D, E y K",
-                            "Las vitaminas C y B",
-                            "La a y la c son correctas"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Cuál es la última capa del tubo digestivo?",
-                        opciones: [
-                            "Submucosa",
-                            "Mucosa",
-                            "Serosa o Adventicia",
-                            "Muscular"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "El páncreas es una  glándula mixta.Señala la correcta",
-                        opciones: [
-                            "La secreción exocrina(se vierte al duodeno  y contiene enzimas que degradan los nutrientes",
-                            "La secreción endocrina(se vierte a la sangre,destaca la insulina y el glucagón.",
-                            "Ninguna es correcta",
-                            "A y B son correctas"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Qué diferencia principal hay entre la acidosis y la alcalosis respiratoria?",
-                        opciones: [
-                            "La acidosis se debe a un aumento de la PaCO₂, mientras que la alcalosis se debe a una disminución de la PaCO₂.",
-                            "La acidosis ocurre cuando hay menos dióxido de carbono en la sangre y la alcalosis cuando hay más.",
-                            "Ambas condiciones se deben a un aumento del bicarbonato en sangre.",
-                            "La acidosis provoca respiración rápida y profunda, mientras que la alcalosis causa respiración lenta y superficial."
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "Elige la respuesta INCORRECTA",
-                        opciones: [
-                            "La hipoxemia significa tener menos oxígeno en sangre",
-                            "Las inflamaciones de las vías respiratorias altas son el asma , bronquitis y neumonía",
-                            "Algunos síntomas del aparato respiratorio son la tos , cianosis y silbancias",
-                            "La apnea es la ausencia de respiración"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Que son los minerales?",
-                        opciones: [
-                            "Son elementos orgánicos que se suelen ingerir en forma de sales minerales y en suficiente  cantidad con la dieta",
-                            "Son elementos inorganicos que se suelen ingerir en forma de sales minerales y en suficiente cantidad con la dieta",
-                            "Son elementos inorganicos que se digieren en forma de agua y en poca cantidad con la dieta",
-                            "Todas son correctas"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Cuál es la característica principal del asma?",
-                        opciones: [
-                            "Inflamación de los bronquios, lo que los vuelve más gruesos y con más moco.",
-                            "Infección bacteriana que afecta los pulmones",
-                            "Reducción de la cantidad de oxígeno en la sangre sin inflamación",
-                            "Bloqueo total de las vías respiratorias sin inflamación."
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cuál es la causa de la tuberculosis?",
-                        opciones: [
-                            "Un virus altamente contagioso",
-                            "Una infección bacteriana crónica.",
-                            "Una reacción alérgica en los pulmones",
-                            "La inhalación de humo de tabaco."
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Cuál de los siguientes nutrientes aporta más energía por gramo?",
-                        opciones: [
-                            "Carbohidratos",
-                            "Lípidos",
-                            "Proteínas",
-                            "Fibra dietética."
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Cuál es el componente mayoritario de la bilis?",
-                        opciones: [
-                            "Agua",
-                            "Sales biliares",
-                            "Lecitina",
-                            "Ácidos grasos"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cómo se absorben los carbohidratos?",
-                        opciones: [
-                            "En forma de disacáridos",
-                            "En forma de polisacáridos",
-                            "En forma de monosacáridos",
-                            "En forma de oligosacáridos"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Cuál es un síntoma clásico de la hepatitis?",
-                        opciones: [
-                            "Dolor en la parte inferior del abdomen",
-                            "Ictericia, debido a un exceso de bilirrubina en el organismo",
-                            "Aumento en la producción de enzimas pancreáticas",
-                            "Disminución en la absorción de carbohidratos"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Cuál de las siguientes opciones NO es una causa frecuente de insuficiencia hepática aguda?",
-                        opciones: [
-                            "Medicamentos",
-                            "Hepatitis crónica",
-                            "Cálculos biliares",
-                            "Cáncer de hígado"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Cuál es el órgano común a los aparatos respiratorio y digestivo?",
-                        opciones: [
-                            "Laringe",
-                            "Esófago",
-                            "Tráquea",
-                            "Faringe"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Dónde se localiza la ampolla de Vater?",
-                        opciones: [
-                            "Duodeno",
-                            "Yeyuno",
-                            "Ciego",
-                            "Íleon"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cuál de estas lipoproteínas recoge el colesterol de las arterias, lo lleva al hígado y es secretado por la bilis?",
-                        opciones: [
-                            "LDL",
-                            "HDL",
-                            "VLDL",
-                            "MDL"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Qué signo NO está asociado a la insuficiencia respiratoria?",
-                        opciones: [
-                            "Hipoxia",
-                            "Hipercapnia",
-                            "Acidosis respiratoria",
-                            "Hipoglucemia"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Cuál de las siguientes opciones NO es una causa común de insuficiencia respiratoria (IR)?",
-                        opciones: [
-                            "Obstrucción de las vías aéreas altas",
-                            "Enfermedades cardíacas",
-                            "Ingesta excesiva de alimentos grasos",
-                            "Traumatismos torácicos que impidan la ventilación"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Cómo se llama el conjunto de actividades involuntarias que el organismo realiza mientras está en reposo absoluto?",
-                        opciones: [
-                            "Gasto energético total",
-                            "Tasa de actividad física",
-                            "Metabolismo basal",
-                            "Energía total diaria"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿ Que es una pleura ?",
-                        opciones: [
-                            "Membrana serosa que recubre los pulmones",
-                            "Capilares que recubren los bronquios",
-                            "Es la parte de la tráquea",
-                            "Es un tipo de célula caliciforme"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿ En qué consiste la ventilación pulmonar ?",
-                        opciones: [
-                            "Transporte de oxígeno a través de la sangre",
-                            "Reacciones metabólicas en las cuales las células musculares captan oxígeno",
-                            "Proceso mecánico de entrada y salida de aire",
-                            "Captación de nutrientes"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿ Cuál es la unidad más básica de las proteínas ?",
-                        opciones: [
-                            "Monosacáridos ",
-                            "Ácidos grasos",
-                            "Vitaminas",
-                            "Aminoácidos "
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿La hematemesis se caracteriza por?",
-                        opciones: [
-                            "La motilidad gastrointestinal ",
-                            "Sangre en el vómito",
-                            "Heces con un aspecto pastoso",
-                            "Sensación desagradable de mal estar en el estómago"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "La úlcera péptica es una lesión de la mucosa derivada por trastornos en el estómago, la causa más frecuente es",
-                        opciones: [
-                            "La causa puede estar en el propio intestino por lesiones o déficits vasculares",
-                            "Por inflamación de la mucosa gástrica",
-                            "Infección por Helicobacter pylori",
-                            "Ninguna es correcta"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿De qué están formados los triglicéridos?",
-                        opciones: [
-                            "Omega 3",
-                            "Una molécula de glicerol y tres ácidos grasos",
-                            "Ácidos grasos",
-                            "Ninguna es correcta"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Que son los lípidos?",
-                        opciones: [
-                            "moléculas compuestas principalmente por carbono e hidrógeno",
-                            "Moléculas compuestas por oxígeno",
-                            "Moléculas compuestas por carbono y nitrato",
-                            "Ninguna es correcta"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "Dónde afecta la enfermedad de Cronh?",
-                        opciones: [
-                            "En el estómago",
-                            "En el intestino (todo el tubo digestivo)",
-                            "En el hígado",
-                            "En el páncreas"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "Cuál es una afectación de trastorno del intestino grueso?",
-                        opciones: [
-                            "Diverticulitis",
-                            "Cirrosis",
-                            "Cálculos",
-                            "Pirosis"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "La fase oral de la digestión",
-                        opciones: [
-                            "ingestión de alimentos",
-                            "formación del bolo alimenticio",
-                            "deglución",
-                            "todas son correctas"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: " en qué consiste la fase esofágica de la digestión?",
-                        opciones: [
-                            "el bolo alimenticio avanza por el esófago",
-                            "el bolo alimenticio entra por el estómago",
-                            "ingesta de alimentos",
-                            "ninguna es correcta"
-                        ],
-                        correcta: 0
-                    },
-
+                    { pregunta: "En las vías nasales superiores o altas están formados por:", opciones: ["Fosas nasales, faringe y laringe.", "Fosas nasales, traquea y laringe.", "Faringe, Laringe y Bronquios.", "Todas son correctas."], correcta: 0 },
+                    { pregunta: "Sobre la Tráquea, señala la CORRECTA.", opciones: ["Conecta la faringe con la laringe.", "Conecta la laringe con los bronquios.", "Los cartílagos tienen forma de C para permitir la distensión del esófago durante la deglución.", "B y C son correctas"], correcta: 3 },
+                    { pregunta: "¿Que tipo de lípido NO aumenta el colesterol y protegen las arterias y venas?", opciones: ["Lípidos Saturados o grasas", "Lípidos complejos.", "Lípidos Polisacaridos", "Lípidos Monoinsaturados o aceites"], correcta: 0 },
+                    { pregunta: "¿Cuál de estas no es una función de la entrada del aire por las fosas nasales?", opciones: ["Conducción del aire", "Protección", "Respiración celular", "Ninguna de las anteriores lo es"], correcta: 2 },
+                    { pregunta: "Sobre los volúmenes respiratorios ¿cuál es aquel que no se puede exhalar?", opciones: ["Volumen corriente", "Volumen residual", "Volumen de reserva inspiratorio", "Volumen de reserva espiratorio"], correcta: 1 },
+                    { pregunta: "Las vitaminas hidrosolubles son…", opciones: ["Las que no se almacenan en el organismo", "Las vitaminas A, D, E y K", "Las vitaminas C y B", "La a y la c son correctas"], correcta: 3 },
+                    { pregunta: "¿Cuál es la última capa del tubo digestivo?", opciones: ["Submucosa", "Mucosa", "Serosa o Adventicia", "Muscular"], correcta: 2 },
+                    { pregunta: "El páncreas es una glándula mixta. Señala la correcta", opciones: ["La secreción exocrina(se vierte al duodeno y contiene enzimas que degradan los nutrientes", "La secreción endocrina(se vierte a la sangre,destaca la insulina y el glucagón.", "Ninguna es correcta", "A y B son correctas"], correcta: 3 },
+                    { pregunta: "¿Qué diferencia principal hay entre la acidosis y la alcalosis respiratoria?", opciones: ["La acidosis se debe a un aumento de la PaCO₂, mientras que la alcalosis se debe a una disminución de la PaCO₂.", "La acidosis ocurre cuando hay menos dióxido de carbono en la sangre y la alcalosis cuando hay más.", "Ambas condiciones se deben a un aumento del bicarbonato en sangre.", "La acidosis provoca respiración rápida y profunda, mientras que la alcalosis causa respiración lenta y superficial."], correcta: 0 },
+                    { pregunta: "Elige la respuesta INCORRECTA", opciones: ["La hipoxemia significa tener menos oxígeno en sangre", "Las inflamaciones de las vías respiratorias altas son el asma , bronquitis y neumonía", "Algunos síntomas del aparato respiratorio son la tos , cianosis y silbancias", "La apnea es la ausencia de respiración"], correcta: 1 },
+                    { pregunta: "¿Que son los minerales?", opciones: ["Son elementos orgánicos que se suelen ingerir en forma de sales minerales y en suficiente cantidad con la dieta", "Son elementos inorganicos que se suelen ingerir en forma de sales minerales y en suficiente cantidad con la dieta", "Son elementos inorganicos que se digieren en forma de agua y en poca cantidad con la dieta", "Todas son correctas"], correcta: 1 },
+                    { pregunta: "¿Cuál es la característica principal del asma?", opciones: ["Inflamación de los bronquios, lo que los vuelve más gruesos y con más moco.", "Infección bacteriana que afecta los pulmones", "Reducción de la cantidad de oxígeno en la sangre sin inflamación", "Bloqueo total de las vías respiratorias sin inflamación."], correcta: 0 },
+                    { pregunta: "¿Cuál es la causa de la tuberculosis?", opciones: ["Un virus altamente contagioso", "Una infección bacteriana crónica.", "Una reacción alérgica en los pulmones", "La inhalación de humo de tabaco."], correcta: 1 },
+                    { pregunta: "¿Cuál de los siguientes nutrientes aporta más energía por gramo?", opciones: ["Carbohidratos", "Lípidos", "Proteínas", "Fibra dietética."], correcta: 1 },
+                    { pregunta: "¿Cuál es el componente mayoritario de la bilis?", opciones: ["Agua", "Sales biliares", "Lecitina", "Ácidos grasos"], correcta: 0 },
+                    { pregunta: "¿Cómo se absorben los carbohidratos?", opciones: ["En forma de disacáridos", "En forma de polisacáridos", "En forma de monosacáridos", "En forma de oligosacáridos"], correcta: 2 },
+                    { pregunta: "¿Cuál es un síntoma clásico de la hepatitis?", opciones: ["Dolor en la parte inferior del abdomen", "Ictericia, debido a un exceso de bilirrubina en el organismo", "Aumento en la producción de enzimas pancreáticas", "Disminución en la absorción de carbohidratos"], correcta: 1 },
+                    { pregunta: "¿Cuál de las siguientes opciones NO es una causa frecuente de insuficiencia hepática aguda?", opciones: ["Medicamentos", "Hepatitis crónica", "Cálculos biliares", "Cáncer de hígado"], correcta: 2 },
+                    { pregunta: "¿Cuál es el órgano común a los aparatos respiratorio y digestivo?", opciones: ["Laringe", "Esófago", "Tráquea", "Faringe"], correcta: 3 },
+                    { pregunta: "¿Dónde se localiza la ampolla de Vater?", opciones: ["Duodeno", "Yeyuno", "Ciego", "Íleon"], correcta: 0 },
+                    { pregunta: "¿Cuál de estas lipoproteínas recoge el colesterol de las arterias, lo lleva al hígado y es secretado por la bilis?", opciones: ["LDL", "HDL", "VLDL", "MDL"], correcta: 1 },
+                    { pregunta: "¿Qué signo NO está asociado a la insuficiencia respiratoria?", opciones: ["Hipoxia", "Hipercapnia", "Acidosis respiratoria", "Hipoglucemia"], correcta: 3 },
+                    { pregunta: "¿Cuál de las siguientes opciones NO es una causa común de insuficiencia respiratoria aguda?", opciones: ["Asma grave", "EPOC (Enfermedad Pulmonar Obstructiva Crónica)", "Neumonía", "Hipotiroidismo crónico"], correcta: 3 }
                 ],
-
                 examen3: [
-                    {
-                        pregunta: "¿A qué grupo del sistema productivo hace referencia esta definición “entidades privadas sin ánimo de lucro?",
-                        opciones: [
-                            "Empresas",
-                            "Administraciones Públicas",
-                            "ONG",
-                            "Banco de España"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Qué función tienen las Administraciones Públicas?",
-                        opciones: [
-                            "Generar beneficios económicos.",
-                            "Ayudar a la sociedad.",
-                            "No tienen ninguna función.",
-                            "Actuar como empresas privadas."
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "Cuál de los siguientes es un beneficio de la Economía verde y circular ?",
-                        opciones: [
-                            "Reduce el efecto invernadero y el impacto medioambiental",
-                            "No se generan nuevos empleos",
-                            "Disminución de las actividades de servicio",
-                            "Ninguna es correcta"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cuál de los siguientes es un proceso imprescindible de la economía verde y circular?",
-                        opciones: [
-                            "Desmaterialización",
-                            "Descarbonizacion",
-                            "Materialización",
-                            "A y B son correctas"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Qué ODS está relacionado con la economía circular?",
-                        opciones: [
-                            "ODS 2 Hambre cero",
-                            "ODS 10 Reducción de las desigualdades",
-                            "ODS 12 Producción y consumo responsable",
-                            "Ninguna de las anteriores es correcta"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Qué obliga la Unión Europea a las empresas a presentar anualmente?",
-                        opciones: [
-                            "Un informe financiero",
-                            "Un informe de gestión",
-                            "Un documento de responsabilidad social",
-                            "Un reporte voluntario"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Cuál de las siguientes NO es una ventaja de integrar los aspectos ASG en una empresa?",
-                        opciones: [
-                            "Reducción de impuestos obligatorios",
-                            "Mejor acceso a financiación",
-                            "Atracción y retención de talento",
-                            "Rentabilidad a largo plazo"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: ".El ODS relacionado con la producción limpia es….",
-                        opciones: [
-                            "Industria,innovación e infraestructura",
-                            "Reducción de las desigualdades",
-                            "Agua limpia y saneamiento",
-                            "Alianzas para lograr los objetivos"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cuál NO es una opción para la implantación de la producción limpia?",
-                        opciones: [
-                            "Buenas prácticas medioambientales",
-                            "Reciclaje interno o reutilizado",
-                            "Cambios en el producto",
-                            "Prioridad en la venta de producto"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Cuáles de las siguientes opciones NO forman parte de las 7 'R' de la economía circular?",
-                        opciones: [
-                            "Rediseñar",
-                            "Reducir",
-                            "Recargar",
-                            "Reciclar"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Qué principio de la economía circular implica dar un nuevo uso a los objetos en lugar de desecharlos?",
-                        opciones: [
-                            "Reparar",
-                            "Reutilizar",
-                            "Renovar",
-                            "Reciclar"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "Una forma ordenada para reducir el impacto medioambiental es:",
-                        opciones: [
-                            "Analizar los elementos que definen un proceso de producción",
-                            "Un entorno económico y social",
-                            "Reutilizar",
-                            "Ninguna es correcta"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "Indica cuál es uno de los elementos que definen un proceso de producción",
-                        opciones: [
-                            "Cambios tecnológicos",
-                            "Cambios en el producto",
-                            "Buenas prácticas medioambientales",
-                            "Todas son correctas"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿A partir de qué proceso diseñan las empresas sus estrategias ASG?",
-                        opciones: [
-                            "Crear nuevos productos para el mercado",
-                            "Analizar la situación de la empresa en relación con su entorno",
-                            "Aumentar las ventas y los beneficios",
-                            "Mejorar la imagen de la marca únicamente"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Qué son los “Compromisos y políticas ASG” según el texto?",
-                        opciones: [
-                            "Problemas ambientales y sociales que afectan a la empresa.",
-                            "Productos diseñados para un mercado específico",
-                            "Principios y medidas que reducen riesgos y aprovechan oportunidades en los ámbitos ASG",
-                            "Herramientas de marketing para mejorar las ventas"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Cuál es la primera fase del ciclo de vida del producto según el modelo lineal de producción y consumo?",
-                        opciones: [
-                            "Diseño",
-                            "Producción",
-                            "Aprovisionamiento ",
-                            "Consumo"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Qué sucede en la fase de “Desecho” del ciclo de vida del producto?",
-                        opciones: [
-                            "Se transporta el producto a los centros de venta",
-                            "Se utilizan los bienes o servicios hasta no poder usarlos más",
-                            "Se fabrican los bienes o servicios en grandes cantidades",
-                            "Se eliminan los materiales empleados en producir el bien o servicio"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "Según la norma ISO 14006-2011, ¿cuál es el objetivo principal del ecodiseño?",
-                        opciones: [
-                            "Reducir los costos de producción de los productos",
-                            "Mejorar la estética y funcionalidad de los productos",
-                            "Minimizar los impactos ambientales integrando aspectos ecológicos en el diseño",
-                            "Aumentar la vida útil de los productos mediante el uso de plásticos"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Qué estrategia de ecodiseño se aplica al reemplazar componentes plásticos por materiales renovables, como la madera, en la fabricación de productos?",
-                        opciones: [
-                            "Desmaterialización",
-                            "Uso de materiales de impacto reducido.",
-                            "Optimización de la distribución",
-                            "Multifuncionalidad"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Qué es la producción limpia?",
-                        opciones: [
-                            "Un proceso que se centra únicamente en la reducción de costos",
-                            "Un conjunto de prácticas que buscan minimizar los daños al ecosistema mediante procesos productivos eficientes",
-                            "La producción de bienes sin ningún tipo de evaluación ambiental",
-                            "Un proceso que solo se aplica a la industria agrícola"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Qué se evalúa durante el proceso de producción limpia?",
-                        opciones: [
-                            "Únicamente los beneficios económicos de la empresa",
-                            "Los procesos de producción, los bienes producidos y los servicios prestados",
-                            "El impacto social de la empresa en sus trabajadores",
-                            "Solo los bienes y productos terminados"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Qué fase de la evaluación de producción limpia implica la recolección de información sobre los procesos actuales de la empresa?",
-                        opciones: [
-                            "Generación de opciones",
-                            "Recogida y análisis de datos",
-                            "Implementación",
-                            "Evaluación y control"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "¿Cuál de estos es un beneficio del ecodiseño?",
-                        opciones: [
-                            "Mejora de la imagen pública",
-                            "No obtener beneficios económicos",
-                            "Obtención de beneficios materiales",
-                            "Menor motivación personal"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cuántas etapas hay en el proceso de ecodiseño?",
-                        opciones: [
-                            "Dos",
-                            "Ocho",
-                            "Cinco",
-                            "Ninguna de las anteriores es correcta"
-                        ],
-                        correcta: 2
-                    },
-                    {
-                        pregunta: "¿Cuál de los siguientes grupos de interés forma parte interna de la empresa?",
-                        opciones: [
-                            "Dirección o directivos",
-                            "Proveedores",
-                            "Competencia",
-                            "Sociedad o comunidad"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Cuál de los siguientes NO es un grupo de interés de la empresa?",
-                        opciones: [
-                            "Proveedores",
-                            "Clientes",
-                            "Empleados",
-                            "Familiares de los empleados"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Qué problemas puede causar la falta de innovación y adaptación del mercado?",
-                        opciones: [
-                            "Menores oportunidades de expansión a nuevos mercados",
-                            "Aumento de beneficios",
-                            "Reducción de costos de producción",
-                            "Mayor demanda de productos"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿Qué riesgo está asociado con el uso de recursos no renovables?",
-                        opciones: [
-                            "Escasez de recursos naturales y volatilidad en sus precios",
-                            "Mayor estabilidad en los costos de producción",
-                            "Reducción de regulaciones ambientales",
-                            "Aumento en la disponibilidad de materias primas"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿ A qué hace referencia los aspectos ASG ?",
-                        opciones: [
-                            "Aspectos ambientales, sociales y de gobernanza",
-                            "Aspectos ambientales, de seguridad y de gobernanza",
-                            "Aspectos acústicos, social y jerárquico",
-                            "Aspectos ambientales, de seguridad y geriátrico"
-                        ],
-                        correcta: 0
-                    },
-                    {
-                        pregunta: "¿ Que ASG tiene relación con el ODS 12 ( Producción y consumo responsable)?",
-                        opciones: [
-                            "Ética y cultura empresarial, lucha contra la corrupción",
-                            "Adaptación al cambio climático",
-                            "Igualdad de trato y oportunidades",
-                            "Todas son correctas"
-                        ],
-                        correcta: 3
-                    },
-                    {
-                        pregunta: "¿Qué persigue la economía circular?",
-                        opciones: [
-                            "Aumentar la generación de residuos",
-                            "Conservar el valor de los recursos y productos",
-                            "Usar más materiales en la producción",
-                            "Todas son correctas"
-                        ],
-                        correcta: 1
-                    },
-                    {
-                        pregunta: "En el modelo de economía circular, ¿Qué  ocurre con la presión sobre los ecosistemas?",
-                        opciones: [
-                            "Aumenta ",
-                            "Se mantiene igual",
-                            "Disminuye",
-                            "Ninguna es correcta"
-                        ],
-                        correcta: 2
-                    },
-
+                    { pregunta: "¿Cuál de estos es un principio de la Sostenibilidad Ambiental?", opciones: ["Principio de la Responsabilidad", "Principio de la Integración", "Principio de la Precaución", "Todos son correctos"], correcta: 3 },
+                    { pregunta: "Elige la respuesta correcta.", opciones: ["La sostenibilidad es la satisfacción de las necesidades de la generación presente sin comprometer la capacidad de las generaciones futuras para satisfacer sus propias necesidades.", "La sostenibilidad es satisfacer la sociedad para la gente de hoy en día.", "La sostenibilidad es satisfacer la economía de la gente de hoy en día y a la vez no satisfacer las necesidades de la gente de mañana.", "Todas son correctas"], correcta: 0 },
+                    { pregunta: "¿Cuáles son los 3 pilares de la Sostenibilidad?", opciones: ["Social, Ambiental, Económica", "Saludable, Económica, Ética", "Social, Ética, Político", "Ambiental, Tecnológico, Social"], correcta: 0 },
+                    { pregunta: "¿Cuál es el principio de la Prevención?", opciones: ["Se aplica el principio cuando existe el riesgo de un daño grave o irreversible", "Trata de corregir el deterioro ambiental en la fuente", "Tiene como finalidad evitar el uso de recursos naturales no renovables", "Obliga a la persona a restaurar el medio ambiente"], correcta: 1 },
+                    { pregunta: "¿Cuál de estos NO es un componente del medio ambiente?", opciones: ["Biótico", "Abiótico", "Cultural", "Tecnológico"], correcta: 3 },
+                    { pregunta: "¿A qué principio hace referencia 'Obliga a la persona a restaurar el medio ambiente'?", opciones: ["Principio de la Responsabilidad", "Principio de la Integración", "Principio de la Precaución", "Principio del que Contamina Paga"], correcta: 3 },
+                    { pregunta: "¿Qué es el desarrollo sostenible?", opciones: ["Es satisfacer las necesidades de las generaciones actuales sin comprometer la capacidad de las generaciones futuras de satisfacer sus propias necesidades.", "El crecimiento económico a cualquier coste.", "El uso ilimitado de los recursos naturales.", "La priorización de los problemas ambientales sobre los sociales y económicos."], correcta: 0 },
+                    { pregunta: "¿Cuál es el principio de la Integración?", opciones: ["Los daños ambientales deben ser corregidos en la fuente", "Obliga a la persona a restaurar el medio ambiente", "Los planes de desarrollo deben de integrar la sostenibilidad", "El uso de la tecnología debe de ser respetuoso con el medio ambiente"], correcta: 2 },
+                    { pregunta: "¿Qué son los recursos naturales?", opciones: ["Son bienes materiales y servicios que proporciona la naturaleza y que son valiosos para la sociedad.", "Son bienes producidos por la tecnología.", "Son servicios ofrecidos por el gobierno para la protección ambiental.", "Son las estructuras artificiales creadas por el ser humano."], correcta: 0 },
+                    { pregunta: "¿Cuál de estos es un recurso natural renovable?", opciones: ["Petróleo", "Agua", "Gas natural", "Carbón"], correcta: 1 },
+                    { pregunta: "¿Cuál es el principio que establece que los planes de desarrollo deben integrar la sostenibilidad?", opciones: ["Principio de Responsabilidad", "Principio de Prevención", "Principio de Integración", "Principio de Precaución"], correcta: 2 },
+                    { pregunta: "¿Cuál de estos NO es un factor de la Sostenibilidad Social?", opciones: ["Vivienda", "Educación", "Energías renovables", "Salud"], correcta: 2 },
+                    { pregunta: "¿Qué es la ecología?", opciones: ["Una rama de la economía que estudia los recursos naturales.", "Una disciplina que estudia las interacciones de los seres vivos entre sí y con su entorno.", "El estudio de la contaminación en las ciudades.", "La ciencia que se ocupa de la planificación urbana sostenible."], correcta: 1 },
+                    { pregunta: "¿Qué es la Responsabilidad Social Corporativa (RSC)?", opciones: ["La obligación legal de una empresa de pagar impuestos.", "El compromiso de una empresa para operar de manera ética y sostenible en sus impactos sociales y ambientales.", "Un requisito del gobierno para obtener licencias de operación.", "La estrategia para maximizar los beneficios económicos sin considerar otros factores."], correcta: 1 },
+                    { pregunta: "¿Cuál de las siguientes es una característica de un ecosistema equilibrado?", opciones: ["Tasa alta de extinción de especies.", "Gran dependencia de recursos externos.", "Capacidad de autorregulación y resiliencia.", "Uso intensivo de energías fósiles."], correcta: 2 }
+                ],
+                examen4: [
+                    { pregunta: "¿Cuál es el tumor maligno más frecuente en la cavidad oral?", opciones: ["Melanoma oral", "Carcinoma de células escamosas (CEC)", "Sarcoma de Kaposi", "Linfoma"], correcta: 1 },
+                    { pregunta: "Los linfomas son tumores malignos que se originan en:", opciones: ["Células epiteliales", "Tejido conectivo", "Ganglios linfáticos", "Tejido nervioso"], correcta: 2 },
+                    { pregunta: "¿Cuál de los siguientes es un factor de riesgo para el carcinoma de células escamosas (CEC) oral?", opciones: ["Consumo de tabaco y alcohol", "Dieta rica en antioxidantes", "Uso de hilo dental diario", "Ejercicio físico regular"], correcta: 0 },
+                    { pregunta: "Las lesiones precancerosas orales más comunes son:", opciones: ["Gingivitis y periodontitis", "Leucoplasia y eritroplasia", "Úlceras aftosas y herpes labial", "Mucocele y ránula"], correcta: 1 },
+                    { pregunta: "¿Qué es la leucoplasia?", opciones: ["Una mancha roja que no se desprende al raspado", "Una mancha blanca que no se desprende al raspado", "Una úlcera dolorosa", "Una inflamación de las encías"], correcta: 1 },
+                    { pregunta: "¿Qué significa el término 'Neoplasia'?", opciones: ["Crecimiento celular normal", "Crecimiento nuevo y descontrolado de células", "Inflamación de un tejido", "Muerte celular programada"], correcta: 1 },
+                    { pregunta: "Un tumor benigno se diferencia de uno maligno en que el benigno:", opciones: ["Invade tejidos adyacentes y metastatiza", "Crece rápidamente", "Suele estar bien delimitado y no metastatiza", "Se considera siempre una emergencia médica"], correcta: 2 },
+                    { pregunta: "¿Qué es la diseminación metastásica?", opciones: ["El crecimiento de un tumor en su lugar de origen", "La propagación de células tumorales a sitios distantes", "La reducción del tamaño de un tumor por quimioterapia", "El proceso de diferenciación celular"], correcta: 1 },
+                    { pregunta: "El sistema TNM para la clasificación de tumores hace referencia a:", opciones: ["Tamaño del tumor, Número de ganglios afectados, Metástasis a distancia", "Tipo de Neoplasia, Manifestación clínica, Morfología celular", "Tratamiento, Necrosis, Mortalidad", "Todas son correctas"], correcta: 0 },
+                    { pregunta: "¿Cuál de los siguientes es un factor pronóstico desfavorable para el cáncer oral?", opciones: ["Detección temprana", "Metástasis ganglionar", "Ausencia de consumo de tabaco", "Buen estado nutricional"], correcta: 1 }
+                ],
+                examen_demografia: [
+                    { pregunta: "¿Qué es la demografía?", opciones: ["Es la ciencia que estudia el crecimiento económico de un país.", "Es la ciencia que estudia la estructura, el volumen, la evolución, la distribución de la población y sus características.", "Es la ciencia que estudia la distribución de las enfermedades en una población.", "Es el estudio de los determinantes sociales de la salud."], correcta: 1 },
+                    { pregunta: "¿Cuál es la diferencia entre demografía estática y dinámica?", opciones: ["La estática estudia la población en un momento dado; la dinámica estudia su evolución a lo largo del tiempo.", "La estática estudia las causas de los cambios; la dinámica estudia las consecuencias.", "La estática solo usa censos; la dinámica solo usa registros civiles.", "No hay diferencia, son el mismo concepto."], correcta: 0 },
+                    { pregunta: "¿Qué es un censo de población?", opciones: ["Un registro continuo de nacimientos, defunciones y migraciones.", "El recuento individualizado de toda la población en un momento determinado.", "Un estudio por muestreo de una característica específica de la población.", "Un listado de votantes para elecciones."], correcta: 1 },
+                    { pregunta: "¿Qué dato poblacional puede obtenerse únicamente a través de un censo?", opciones: ["El número de nacimientos en un año.", "La tasa de mortalidad.", "La distribución por edad y sexo en un instante.", "La tasa de migración neta."], correcta: 2 },
+                    { pregunta: "¿Cuál es la principal fuente de datos para la Demografía Dinámica?", opciones: ["El Padrón Municipal de Habitantes.", "El Registro Civil (nacimientos, defunciones, matrimonios).", "Las encuestas de salud.", "Los censos de población."], correcta: 1 },
+                    { pregunta: "¿Qué es el Padrón Municipal de Habitantes?", opciones: ["Una base de datos estadística que se actualiza cada 10 años.", "Un registro administrativo que acredita la residencia y el domicilio de los habitantes de un municipio.", "Un listado de personas con derecho a voto.", "El registro de extranjeros residentes en España."], correcta: 1 },
+                    { pregunta: "¿Qué organismo español realiza el Censo de Población y Viviendas?", opciones: ["El Ministerio de Sanidad.", "El Instituto Nacional de Estadística (INE).", "El Centro de Investigaciones Sociológicas (CIS).", "La Seguridad Social."], correcta: 1 },
+                    { pregunta: "¿Cuál es un inconveniente del Padrón Municipal respecto al Censo?", opciones: ["Es menos frecuente.", "No tiene carácter legal.", "Tiende a sobreestimar la población.", "Solo registra a los ciudadanos españoles."], correcta: 2 },
+                    { pregunta: "¿Qué función demográfica estudia la composición de la población por edad, sexo y otras características?", opciones: ["Mortalidad", "Natalidad/Fecundidad", "Estructura de la Población", "Migración"], correcta: 2 },
+                    { pregunta: "¿Qué función demográfica describe la frecuencia de los nacimientos y cómo influyen en el tamaño de la población?", opciones: ["Mortalidad", "Natalidad/Fecundidad", "Migración", "Estructura de la Población"], correcta: 1 },
+                    { pregunta: "¿Qué indicador mide la intensidad con que se producen las muertes en una población?", opciones: ["Natalidad/Fecundidad", "Mortalidad", "Migración", "Estructura de la Población"], correcta: 1 },
+                    { pregunta: "¿Qué función demográfica es el movimiento espacial de la población?", opciones: ["Mortalidad", "Natalidad/Fecundidad", "Migración", "Estructura de la Población"], correcta: 2 },
+                    { pregunta: "¿Qué característica de la población (estructura) se considera la más importante para el análisis demográfico?", opciones: ["Estado civil", "Nivel de estudios", "Edad y sexo", "Ocupación"], correcta: 2 },
+                    { pregunta: "¿Cómo se denomina la representación gráfica de la distribución de la población por edad y sexo?", opciones: ["Gráfico de barras", "Histograma", "Pirámide de población", "Curva epidémica"], correcta: 2 },
+                    { pregunta: "¿Qué forma de pirámide de población indica una población joven con alta natalidad y mortalidad?", opciones: ["Campana (Estacionaria)", "Urna (Regresiva)", "Pagoda (Progresiva)", "Columna"], correcta: 2 },
+                    { pregunta: "¿Qué forma de pirámide de población indica una población envejecida con baja natalidad y mortalidad?", opciones: ["Campana (Estacionaria)", "Urna (Regresiva)", "Pagoda (Progresiva)", "Columna"], correcta: 1 },
+                    { pregunta: "¿Qué forma de pirámide de población es típica de países desarrollados con crecimiento demográfico lento o nulo?", opciones: ["Pagoda (Progresiva)", "Urna (Regresiva)", "Campana (Estacionaria)", "Campana (Estacionaria) o Urna (Regresiva)"], correcta: 3 },
+                    { pregunta: "¿Qué es la esperanza de vida?", opciones: ["La edad máxima que puede vivir un ser humano.", "El promedio de años que se espera viva una persona al nacer, si se mantienen las condiciones de mortalidad.", "El número de personas que sobreviven a los 65 años.", "La edad a la que muere la persona más vieja de una población."], correcta: 1 },
+                    { pregunta: "¿Qué es la tasa bruta de natalidad (TBN)?", opciones: ["El número de nacimientos por cada 1.000 habitantes en un periodo.", "El número de hijos que tiene una mujer a lo largo de su vida fértil.", "El número de defunciones por cada 1.000 habitantes.", "El número de nacimientos en un año dividido por el número de mujeres en edad fértil."], correcta: 0 },
+                    { pregunta: "¿Cuál es el principal inconveniente de la Tasa Bruta de Natalidad?", opciones: ["Es difícil de calcular.", "No tiene en cuenta el número de mujeres en edad fértil.", "Solo considera el total de defunciones.", "Se ve afectada por la migración."], correcta: 1 },
+                    { pregunta: "¿Qué es la tasa global de fecundidad (TGF)?", opciones: ["El número de defunciones por cada 1.000 habitantes.", "El número de hijos promedio que tendría una mujer si mantiene las tasas de fecundidad por edad.", "El número de matrimonios por cada 1.000 habitantes.", "El número de personas que emigran."], correcta: 1 },
+                    { pregunta: "¿Qué valor de Tasa Global de Fecundidad (TGF) se considera la tasa de reemplazo generacional?", opciones: ["1.0 hijos por mujer.", "2.1 hijos por mujer.", "3.5 hijos por mujer.", "Más de 5 hijos por mujer."], correcta: 1 },
+                    { pregunta: "¿Qué es la tasa bruta de mortalidad (TBM)?", opciones: ["El número de muertes por cada 1.000 habitantes en un periodo.", "La probabilidad de morir a una edad específica.", "El número de muertes infantiles por cada 1.000 nacidos vivos.", "El número de defunciones por enfermedad específica."], correcta: 0 },
+                    { pregunta: "¿Cuál es el principal inconveniente de la Tasa Bruta de Mortalidad?", opciones: ["Solo considera las defunciones por causas violentas.", "Se ve influida por la estructura de edad de la población (una población envejecida tendrá TBM más alta).", "Solo se puede calcular con datos censales.", "Es más baja en países en desarrollo."], correcta: 1 },
+                    { pregunta: "¿Qué tasa de mortalidad es considerada un indicador sensible del nivel de desarrollo socioeconómico de un país?", opciones: ["Tasa Bruta de Mortalidad.", "Tasa de Mortalidad por Cáncer.", "Tasa de Mortalidad Materna.", "Tasa de Mortalidad Infantil."], correcta: 3 },
+                    { pregunta: "¿Qué mide la Tasa de Migración Neta?", opciones: ["La diferencia entre el número de emigrantes e inmigrantes.", "El número total de personas que se desplazan.", "La tasa de mortalidad de los migrantes.", "La distancia media recorrida por los migrantes."], correcta: 0 },
+                    { pregunta: "¿Qué se entiende por 'Envejecimiento Demográfico'?", opciones: ["Un aumento en la esperanza de vida al nacer.", "Un aumento en el número absoluto y la proporción de personas mayores.", "Una disminución de la Tasa Bruta de Mortalidad.", "Una disminución de la Tasa Global de Fecundidad."], correcta: 1 },
+                    { pregunta: "¿Cuál es una consecuencia económica del envejecimiento demográfico?", opciones: ["Aumento de la Tasa Bruta de Natalidad.", "Mayor presión sobre el sistema de pensiones y salud.", "Disminución de la esperanza de vida.", "Aumento de la población activa en el sector primario."], correcta: 1 },
+                    { pregunta: "¿Cómo se denomina al proceso por el cual la población urbana crece más rápido que la rural?", opciones: ["Envejecimiento", "Globalización", "Urbanización", "Transición Demográfica"], correcta: 2 },
+                    { pregunta: "¿Qué es la 'Transición Demográfica'?", opciones: ["Un cambio en los patrones de migración internacional.", "Un modelo que explica el paso de altas tasas de natalidad y mortalidad a bajas tasas.", "El proceso de urbanización en los países en desarrollo.", "El cambio en la esperanza de vida de una población."], correcta: 1 },
+                    { pregunta: "¿Cuál de estos países se encuentra típicamente en la etapa 4 o 5 (post-transición) de la Transición Demográfica?", opciones: ["Niger", "España", "India", "Nigeria"], correcta: 1 },
+                    { pregunta: "¿Qué indicador se utiliza para medir el impacto de las migraciones en la población total?", opciones: ["Tasa de Mortalidad Bruta", "Tasa de Fecundidad", "Tasa de Crecimiento Natural", "Tasa de Crecimiento Total"], correcta: 3 },
+                    { pregunta: "¿Qué indica un Índice de Dependencia Global alto?", opciones: ["Una baja tasa de paro.", "Una proporción alta de población inactiva (niños y mayores) respecto a la población activa.", "Una baja esperanza de vida.", "Una alta tasa de urbanización."], correcta: 1 },
+                    { pregunta: "¿Cuál es la causa principal del crecimiento natural (vegetativo) negativo en muchos países desarrollados?", opciones: ["Alta mortalidad.", "Baja natalidad, por debajo de la tasa de reemplazo.", "Alta emigración.", "Baja esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Qué tipo de migración es un movimiento de un país a otro?", opciones: ["Interna", "Externa o Internacional", "Temporal", "Estacional"], correcta: 1 },
+                    { pregunta: "¿Qué mide la Tasa de Mortalidad Específica por Edad?", opciones: ["El número total de muertes en un año.", "El número de muertes en un grupo de edad determinado por cada 1.000 personas de ese mismo grupo.", "La diferencia entre la esperanza de vida de hombres y mujeres.", "El impacto de la migración en la mortalidad."], correcta: 1 },
+                    { pregunta: "¿Cuál es el efecto de la 'Estructura de la Población' sobre las tasas brutas?", opciones: ["Las tasas brutas son independientes de la estructura de edad.", "La estructura de edad no influye en la Tasa Bruta de Mortalidad.", "La Tasa Bruta de Mortalidad y Natalidad son fuertemente influidas por la composición por edad (ej. TBM alta en población envejecida).", "Solo influye en la Tasa Global de Fecundidad."], correcta: 2 },
+                    { pregunta: "¿Qué fenómeno se da cuando la Tasa Global de Fecundidad cae por debajo de la tasa de reemplazo (2.1 hijos por mujer)?", opciones: ["Explosión demográfica", "Crecimiento cero o negativo a largo plazo", "Rejuvenecimiento poblacional", "Aumento de la esperanza de vida"], correcta: 1 },
+                    { pregunta: "¿Qué es el 'Dividendo Demográfico'?", opciones: ["El ahorro que acumula la población anciana.", "Un período en el que la proporción de población activa es mucho mayor que la población dependiente (baja dependencia).", "Un aumento de la tasa de mortalidad.", "La disminución de la esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Qué dato demográfico se utiliza para calcular la 'Tasa Específica de Fecundidad por Edad'?", opciones: ["El total de nacimientos.", "El número de mujeres en cada grupo de edad fértil.", "El total de la población activa.", "La Tasa Bruta de Natalidad."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Densidad de Población'?", opciones: ["El total de habitantes en un país.", "El número de habitantes por unidad de superficie (km²).", "La distribución de la población por edad y sexo.", "El promedio de la esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Cuál de estos NO es un componente del crecimiento de la población?", opciones: ["Natalidad", "Mortalidad", "Migración", "Nivel de alfabetización"], correcta: 3 },
+                    { pregunta: "¿Qué es un 'Cohorte' en demografía?", opciones: ["Un grupo de población que comparte un evento demográfico común en el mismo período (ej. nacidos en el mismo año).", "Un grupo de personas que viven en la misma área geográfica.", "Una representación gráfica de la población.", "El total de la población de un país."], correcta: 0 },
+                    { pregunta: "¿Qué se entiende por 'Índice de Envejecimiento'?", opciones: ["El porcentaje de personas menores de 15 años.", "La razón entre la población de 65 años o más y la población menor de 15 años.", "El promedio de la edad de la población.", "La Tasa de Mortalidad por edad avanzada."], correcta: 1 },
+                    { pregunta: "¿Qué causa principal contribuyó a la alta mortalidad en la fase pre-transicional (antiguo régimen) del modelo demográfico?", opciones: ["Accidentes de tráfico.", "Guerras, epidemias y hambrunas.", "Enfermedades crónicas.", "Cáncer y enfermedades cardiovasculares."], correcta: 1 },
+                    { pregunta: "¿En qué etapa de la Transición Demográfica se observa la 'Explosión Demográfica'?", opciones: ["Etapa 1 (Pre-transicional).", "Etapa 2 (Inicio de la transición, con caída de la mortalidad e inicio de la natalidad).", "Etapa 3 (Caída de la natalidad).", "Etapa 4 (Post-transicional)."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Población Activa'?", opciones: ["Las personas menores de 16 años.", "El conjunto de personas en edad de trabajar que tienen empleo o lo buscan.", "La población jubilada.", "El total de habitantes de un país."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Emigrante'?", opciones: ["Persona que entra a vivir en un país o región (Inmigrante).", "Persona que sale de un país o región para vivir en otro.", "Persona que se desplaza temporalmente por turismo.", "Persona que cambia de domicilio dentro del mismo municipio."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Mortalidad Perinatal'?", opciones: ["La mortalidad infantil después del primer año de vida.", "La suma de la mortalidad fetal tardía y la mortalidad neonatal precoz (antes de 7 días).", "La mortalidad causada por el embarazo y el parto en la mujer.", "La mortalidad de personas de 65 años o más."], correcta: 1 },
+                    { pregunta: "¿Qué indicador complementa mejor la Tasa Bruta de Natalidad para un análisis más preciso de los nacimientos?", opciones: ["Tasa Bruta de Mortalidad.", "Tasa de Crecimiento Total.", "Tasa Global de Fecundidad.", "Tasa de Migración Neta."], correcta: 2 },
+                    { pregunta: "¿Qué se entiende por 'Movimiento Natural o Vegetativo de la población'?", opciones: ["El efecto de la migración en la población.", "La diferencia entre nacimientos y defunciones.", "La suma de la población activa y la inactiva.", "El cambio en la estructura de edad de la población."], correcta: 1 },
+                    { pregunta: "¿Cuál es el impacto de la mejora en la sanidad y la alimentación en una población?", opciones: ["Aumento de la natalidad y disminución de la esperanza de vida.", "Aumento de la mortalidad y disminución de la esperanza de vida.", "Aumento de la esperanza de vida y disminución de la mortalidad.", "Disminución de la natalidad y la migración."], correcta: 2 },
+                    { pregunta: "¿Qué variable demográfica es la principal impulsora de la forma 'Campana' o estacionaria en la pirámide de población?", opciones: ["Alta migración neta negativa.", "Baja natalidad y mortalidad que se equilibran.", "Alta mortalidad infantil.", "Alta fecundidad por encima del reemplazo."], correcta: 1 },
+                    { pregunta: "¿Qué mide la 'Tasa de Dependencia de Vejez'?", opciones: ["La población menor de 15 años respecto a la población activa.", "La población de 65 años o más respecto a la población en edad activa (16-64 años).", "El total de población inactiva respecto a la población activa.", "La esperanza de vida a los 65 años."], correcta: 1 },
+                    { pregunta: "¿Cuál de las siguientes es una fuente de datos demográficos de carácter administrativo y continuo?", opciones: ["El Censo de Población (periódico).", "La Encuesta de Salud (por muestreo).", "El Registro Civil (registro continuo de hechos vitales).", "La Pirámide de población (representación gráfica)."], correcta: 2 },
+                    { pregunta: "¿Qué indica un 'Índice Sintético de Fecundidad' de 1.2 hijos por mujer?", opciones: ["La población está creciendo rápidamente.", "La población se está reproduciendo a una tasa por debajo del reemplazo generacional.", "La migración es muy alta.", "La mortalidad infantil es muy alta."], correcta: 1 },
+                    { pregunta: "¿Qué característica define la etapa 3 (final de la transición) de la Transición Demográfica?", opciones: ["Altas tasas de natalidad y mortalidad.", "Baja mortalidad y natalidad con crecimiento bajo o nulo.", "Caída de la natalidad después de la caída de la mortalidad.", "Alta mortalidad infantil y baja esperanza de vida."], correcta: 2 },
+                    { pregunta: "¿Cuál es el principal factor que impulsa la caída de la natalidad en la Transición Demográfica?", opciones: ["Mejora de la sanidad.", "Control de la mortalidad.", "Cambios sociales, culturales y económicos (educación, rol de la mujer, coste de la crianza).", "Aumento de la migración."], correcta: 2 },
+                    { pregunta: "¿Qué representa la base de una Pirámide de Población?", opciones: ["La población más envejecida.", "Los grupos de edad más jóvenes (0-4 años).", "La población activa.", "La esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Inmigrante'?", opciones: ["Persona que abandona un país (emigrante).", "Persona que llega a un país o región para establecer su residencia.", "Persona que viaja por turismo.", "Persona que se desplaza por motivos de estudio."], correcta: 1 },
+                    { pregunta: "¿Qué es el 'Saldo Migratorio'?", opciones: ["La diferencia entre la Tasa de Natalidad y la de Mortalidad.", "El número de habitantes en un municipio.", "La diferencia entre inmigrantes y emigrantes.", "El total de la población activa."], correcta: 2 },
+                    { pregunta: "¿Qué es la 'Tasa de Crecimiento Natural (Vegetativo)'?", opciones: ["La suma de la natalidad y la migración.", "La diferencia entre el número de nacimientos y el número de defunciones.", "La diferencia entre el total de población en dos años consecutivos.", "La tasa de dependencia."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Edad Media de la Población'?", opciones: ["La edad más frecuente en la población.", "La edad a la que muere el 50% de la población.", "El promedio aritmético de las edades de todos los habitantes.", "La edad a la que la Tasa de Mortalidad es máxima."], correcta: 2 },
+                    { pregunta: "¿Cuál es el principal riesgo demográfico asociado a una pirámide de población con forma de 'Urna'?", opciones: ["Explosión demográfica.", "Riesgo de colapso de los sistemas de bienestar social (pensiones, salud).", "Alta mortalidad infantil.", "Baja esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Qué mide la 'Tasa de Mortalidad Infantil'?", opciones: ["Las muertes de niños menores de 5 años.", "Las muertes de niños menores de 1 año por cada 1.000 nacidos vivos.", "Las muertes maternas durante el parto.", "El total de defunciones infantiles."], correcta: 1 },
+                    { pregunta: "¿Qué fenómeno se produce cuando una población joven se traslada de forma masiva a las áreas urbanas?", opciones: ["Envejecimiento de la población rural.", "Disminución de la tasa de fecundidad urbana.", "Aumento de la mortalidad urbana.", "Disminución de la población activa en las ciudades."], correcta: 0 },
+                    { pregunta: "¿Qué es un 'Padrón Continuo'?", opciones: ["El censo que se realiza cada 10 años.", "Un registro civil actualizado solo anualmente.", "Un registro administrativo que se actualiza constantemente (diariamente o en tiempo real).", "Una base de datos de personas fallecidas."], correcta: 2 },
+                    { pregunta: "¿Qué indicador se utiliza para calcular la 'Tasa Específica de Mortalidad'?", opciones: ["El total de defunciones.", "El número de defunciones en un grupo específico (edad, causa, sexo) y la población de ese grupo.", "La Tasa Bruta de Mortalidad.", "La esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Cuál de estos países ha completado la Transición Demográfica y presenta un crecimiento natural negativo?", opciones: ["Kenia", "Brasil", "Alemania", "India"], correcta: 2 },
+                    { pregunta: "¿Qué mide el 'Índice de Fecundidad'?", opciones: ["El total de nacimientos.", "La capacidad real o potencial de una población de reproducirse.", "La Tasa Bruta de Natalidad.", "El total de la población de un país."], correcta: 1 },
+                    { pregunta: "¿Qué es un 'Diagrama de Lexis'?", opciones: ["Un gráfico que representa la estructura de la población.", "Un diagrama que relaciona el tiempo, la edad y el período para el análisis demográfico.", "Un gráfico que muestra el saldo migratorio.", "Una tabla de mortalidad."], correcta: 1 },
+                    { pregunta: "¿Qué tipo de migración es el desplazamiento de trabajadores agrícolas durante la cosecha?", opciones: ["Definitiva", "Interna", "Estacional o temporal", "Externa"], correcta: 2 },
+                    { pregunta: "¿Cuál es el significado de un 'Índice de Sobreenvejecimiento' alto?", opciones: ["Que hay mucha población infantil.", "Que la población mayor de 85 años está creciendo rápidamente en relación a la población de 65-84 años.", "Que la tasa de fecundidad es alta.", "Que la mortalidad infantil es baja."], correcta: 1 },
+                    { pregunta: "¿Cuál es una ventaja de la Tasa Global de Fecundidad (TGF) respecto a la Tasa Bruta de Natalidad (TBN)?", opciones: ["La TBN es más fácil de calcular.", "La TGF elimina el efecto de la estructura de edad de la población, dando una medida más pura de la intensidad de la fecundidad.", "La TGF solo se puede calcular en censos.", "La TGF es menos sensible a los cambios sociales."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Causas de Muerte' en demografía?", opciones: ["El total de defunciones en un año.", "La enfermedad o lesión que produce la muerte, clasificada según la CIE (Clasificación Internacional de Enfermedades).", "La edad media de la población fallecida.", "La tasa bruta de mortalidad."], correcta: 1 },
+                    { pregunta: "¿Qué fenómeno se observa en los países en la etapa 2 de la Transición Demográfica (países en desarrollo)?", opciones: ["Altas tasas de natalidad y mortalidad.", "Caída de la mortalidad con natalidad todavía alta (alto crecimiento).", "Bajas tasas de natalidad y mortalidad.", "Crecimiento negativo de la población."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Esperanza de Vida Libre de Discapacidad'?", opciones: ["La esperanza de vida al nacer, sin más.", "El número de años que se espera que una persona viva sin experimentar una discapacidad significativa.", "La esperanza de vida de las personas con discapacidad.", "La edad promedio de la población activa."], correcta: 1 },
+                    { pregunta: "¿Cuál de estos NO es un dato de Estructura de la Población?", opciones: ["Edad", "Sexo", "Nivel de estudios", "Tasa de Fecundidad"], correcta: 3 },
+                    { pregunta: "¿Qué indicador es necesario para calcular la Tasa de Crecimiento Natural?", opciones: ["Solo la migración.", "Las tasas de natalidad y mortalidad.", "Solo la Tasa de Dependencia.", "Solo la población total."], correcta: 1 },
+                    { pregunta: "¿Cuál es la fuente de datos que registra los matrimonios?", opciones: ["El Padrón Municipal.", "El Registro Civil.", "El Censo de Población.", "La Seguridad Social."], correcta: 1 },
+                    { pregunta: "¿Qué indica un 'Índice de Masculinidad' de 105?", opciones: ["Hay 105 mujeres por cada 100 hombres.", "Hay 105 hombres por cada 100 mujeres.", "El total de población es de 105.000 personas.", "La edad media es de 105 años."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Proyecciones Demográficas'?", opciones: ["La descripción de la población pasada.", "Estimaciones sobre la futura estructura y tamaño de la población, basadas en hipótesis de fecundidad, mortalidad y migración.", "El recuento exacto de la población presente.", "El total de migrantes en un año."], correcta: 1 },
+                    { pregunta: "¿Qué impacto tiene un bajo Índice Sintético de Fecundidad (menor a 2.1) en la pirámide de población?", opciones: ["Un ensanchamiento de la base (Pagoda).", "Un estrechamiento de la base (Urna).", "Una base estable (Campana).", "Un aumento de la población activa."], correcta: 1 },
+                    { pregunta: "¿Qué fenómeno puede ralentizar o compensar el envejecimiento demográfico en un país con baja natalidad?", opciones: ["Aumento de la mortalidad.", "Fuerte Inmigración de población joven.", "Aumento de la emigración.", "Disminución de la esperanza de vida."], correcta: 1 },
+                    { pregunta: "¿Cuál es el principal propósito de una 'Tabla de Mortalidad'?", opciones: ["Calcular la Tasa Bruta de Mortalidad.", "Calcular las probabilidades de muerte y supervivencia a diferentes edades y la esperanza de vida.", "Estudiar las causas de muerte.", "Analizar la migración."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Mortalidad Neonatal'?", opciones: ["Las muertes de niños mayores de un año.", "Las muertes que ocurren durante el primer mes de vida.", "Las muertes causadas por accidentes.", "La mortalidad en la adolescencia."], correcta: 1 },
+                    { pregunta: "¿Qué indicador es esencial para calcular la Tasa de Dependencia de Vejez?", opciones: ["Población total.", "Población activa (16-64 años) y población mayor (65+).", "Tasa de Fecundidad.", "Índice de Masculinidad."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Población Inactiva'?", opciones: ["Personas que tienen empleo.", "Personas que están en edad de trabajar pero no buscan empleo.", "Jubilados, estudiantes y personas que se dedican a las labores del hogar (no activos).", "El total de la población en edad laboral."], correcta: 2 },
+                    { pregunta: "¿Qué es la 'Revolución Demográfica'?", opciones: ["Un cambio brusco en la estructura de edad.", "El paso de un régimen demográfico antiguo (alta natalidad/mortalidad) a un régimen moderno (baja natalidad/mortalidad), conocido como Transición Demográfica.", "Un aumento repentino de la esperanza de vida.", "Una disminución de la migración internacional."], correcta: 1 },
+                    { pregunta: "¿Cuál es el impacto principal del fenómeno de 'Urbanización' en la demografía de un país?", opciones: ["Aumento de la natalidad rural.", "Concentración de la población y cambio en los patrones de fecundidad y mortalidad.", "Disminución de la esperanza de vida.", "Envejecimiento de las ciudades."], correcta: 1 },
+                    { pregunta: "¿Qué riesgo se asocia a una Tasa de Migración Neta positiva (mayor inmigración que emigración)?", opciones: ["Disminución de la población activa.", "Aumento de la diversidad cultural y posible presión sobre los servicios públicos a corto plazo.", "Aceleración del envejecimiento demográfico.", "Disminución de la Tasa de Crecimiento Total."], correcta: 1 },
+                    { pregunta: "¿Qué fenómeno contribuye a que la Tasa Bruta de Mortalidad no sea un buen indicador del nivel sanitario de un país?", opciones: ["La alta natalidad.", "La migración.", "La estructura de edad (un país envejecido tendrá TBM alta a pesar de la buena sanidad).", "La baja esperanza de vida."], correcta: 2 },
+                    { pregunta: "¿Qué se entiende por 'Tasa de Mortalidad por Causa Específica'?", opciones: ["El total de muertes en un año.", "El número de muertes por una enfermedad o lesión concreta por cada 100.000 habitantes.", "La Tasa Bruta de Mortalidad.", "La Tasa de Mortalidad Infantil."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Mediana de Edad'?", opciones: ["El promedio de edad de la población.", "La edad que divide a la población en dos grupos iguales (50% más joven y 50% más viejo).", "La edad a la que la Tasa de Mortalidad es mínima.", "La edad más frecuente."], correcta: 1 },
+                    { pregunta: "¿Cuál es un factor que contribuye a la alta fecundidad en los países en desarrollo (Etapa 2 de la Transición)?", opciones: ["Alta educación de la mujer.", "Necesidad de mano de obra infantil, falta de acceso a métodos anticonceptivos y baja escolarización.", "Baja mortalidad infantil.", "Alto coste de la crianza."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Reemplazo Generacional'?", opciones: ["Que la esperanza de vida es alta.", "El nivel de fecundidad (TGF) necesario para que una generación se reemplace a sí misma (aproximadamente 2.1 hijos por mujer).", "Que la población activa es muy numerosa.", "La Tasa Bruta de Natalidad."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Mortalidad Materna'?", opciones: ["Las muertes de mujeres por cualquier causa.", "Las muertes de mujeres durante el embarazo, parto o puerperio (42 días después) por causas relacionadas con estos procesos.", "Las muertes de madres solteras.", "El total de muertes de mujeres en edad fértil."], correcta: 1 },
+                    { pregunta: "¿Cuál de estos NO es un tipo de migración?", opciones: ["Interna", "Externa", "Vegetativa", "Estacional"], correcta: 2 },
+                    { pregunta: "¿Qué se entiende por 'Transición Epidemiológica'?", opciones: ["El cambio de patrones de morbilidad y mortalidad, de enfermedades infecciosas a enfermedades crónicas y degenerativas.", "El paso de altas a bajas tasas de natalidad.", "La migración masiva de población.", "El envejecimiento de la población."], correcta: 0 },
+                    { pregunta: "¿Qué indicador demográfico se utiliza para calcular el 'Índice de Envejecimiento'?", opciones: ["La Tasa Bruta de Mortalidad.", "La población de 65+ años y la población de 0-14 años.", "La Tasa de Fecundidad.", "La Tasa de Crecimiento Total."], correcta: 1 },
+                    { pregunta: "¿Qué representa el estrechamiento de la base de una pirámide de población?", opciones: ["Aumento de la esperanza de vida.", "Disminución de la natalidad.", "Aumento de la mortalidad infantil.", "Alta inmigración."], correcta: 1 },
+                    { pregunta: "¿Cuál es el principal impacto del 'Dividendo Demográfico'?", opciones: ["Falta de mano de obra.", "Oportunidad de crecimiento económico debido a la gran proporción de población activa.", "Aumento de la dependencia de vejez.", "Disminución de la inversión en educación."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Envejecimiento en la Base' de la pirámide?", opciones: ["La población más joven es cada vez más numerosa.", "La población en edad activa disminuye.", "La base se estrecha debido a la disminución de la natalidad.", "El aumento de la población de 85+ años."], correcta: 2 },
+                    { pregunta: "¿Qué se entiende por 'Registro Civil'?", opciones: ["Una encuesta por muestreo de la población.", "Un registro público donde se inscriben los hechos relativos al estado civil de las personas (nacimientos, defunciones, etc.).", "Una base de datos de personas con derecho a voto.", "El registro de la población activa."], correcta: 1 },
+                    { pregunta: "¿Qué mide la 'Razón de Prevalencia de la Invalidez'?", opciones: ["La mortalidad por discapacidad.", "El número de personas con discapacidad en relación a la población total.", "La tasa de fecundidad.", "La edad media de la población."], correcta: 1 },
+                    { pregunta: "¿Qué factor social contribuye a la disminución de la Tasa Global de Fecundidad en los países desarrollados?", opciones: ["Mayor mortalidad infantil.", "Mayor emigración.", "Incorporación de la mujer al mercado laboral y aumento de su nivel educativo.", "Disminución de la esperanza de vida."], correcta: 2 },
+                    { pregunta: "¿Qué se entiende por 'Crecimiento Cero' de la población?", opciones: ["Crecimiento negativo.", "Tasa de Crecimiento Total (Natural + Migratorio) igual a cero.", "Crecimiento muy rápido.", "Crecimiento solo por migración."], correcta: 1 },
+                    { pregunta: "¿Qué es la 'Razón de Dependencia'?", opciones: ["El porcentaje de personas activas en la población.", "La relación entre la población dependiente (niños y mayores) y la población en edad productiva (activa).", "La tasa de migración.", "El total de la población de un país."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Natalidad'?", opciones: ["El estudio de las muertes.", "El fenómeno demográfico de los nacimientos y su frecuencia.", "La migración.", "El envejecimiento."], correcta: 1 },
+                    { pregunta: "¿Qué se entiende por 'Población Residente' en demografía?", opciones: ["La población que solo está de paso.", "La población que tiene su residencia habitual en un área determinada.", "La población que trabaja pero no vive en el área.", "La población turista."], correcta: 1 }
+                ],
+                // NUEVO EXAMEN AÑADIDO: EPIDEMIOLOGÍA (UT2)
+                examen_epidemiologia: [
+                    { pregunta: "¿En qué año y dónde se documentó la primera mención del término \"Epidemiología\"?", opciones: ["En 1598, en el libro Tratado sobre las epidemias de peste en Europa, publicado en Madrid.", "En 1854, durante el estudio del cólera realizado por John Snow en Londres.", "En 1943, por John Ryle, al introducir la medicina social.", "En el siglo XIX, con los descubrimientos de Pasteur y Koch."], correcta: 0 },
+                    { pregunta: "¿Quién fue el autor del libro donde se hizo la primera mención del término \"Epidemiología\" (Tratado sobre las epidemias de peste en Europa)?", opciones: ["John Snow.", "Louis Pasteur.", "Quinto Tiberio Angelerio.", "Austin Bradford Hill."], correcta: 2 },
+                    { pregunta: "¿De qué idioma procede la etimología de la palabra \"epidemiología\" y qué significa la raíz demos?", opciones: ["Procede del latín, y demos significa 'enfermedad'.", "Procede del griego, y demos significa 'pueblo/población'.", "Procede del latín, y demos significa 'estudio'.", "Procede del griego, y demos significa 'sobre'."], correcta: 1 },
+                    { pregunta: "¿Cuál es el significado etimológico de \"epidemiología\"?", opciones: ["\"Ciencia que estudia los agentes causales\".", "\"Ciencia que estudia los factores de riesgo\".", "\"Ciencia que estudia lo que está sobre la población\".", "\"Ciencia que estudia las enfermedades crónicas\"."], correcta: 2 },
+                    { pregunta: "En sus orígenes, ¿en qué tipo de enfermedades se centró la epidemiología?", opciones: ["Enfermedades cardiovasculares y cáncer.", "Patologías asociadas al envejecimiento.", "Epidemias infecciosas (cólera, viruela, peste, gripe).", "Enfermedades por exposición laboral, como el mesotelioma."], correcta: 2 },
+                    { pregunta: "¿Cuál de las siguientes preguntas buscaba describir la epidemiología en sus primeras etapas?", opciones: ["¿Qué factores sociales influyen en la salud?.", "¿A qué grupos afectaban las enfermedades?.", "¿Cómo se mide la fuerza de la asociación?.", "¿Cuál era el riesgo relativo (RR) de la enfermedad?."], correcta: 1 },
+                    { pregunta: "Durante siglos, ¿cuáles eran las únicas medidas de control disponibles contra las epidemias que diezmaron poblaciones enteras?", opciones: ["Vacunación y antibióticos.", "Saneamiento y mejora de la higiene.", "Aislamiento y cuarentena.", "Tratamiento antirretroviral."], correcta: 2 },
+                    { pregunta: "¿Qué descubrimientos fundamentales de Pasteur y Koch en el siglo XIX provocaron un cambio fundamental en la epidemiología?", opciones: ["La identificación de la multicausalidad de las enfermedades.", "La identificación de bacterias y virus como agentes causales.", "El estudio de los determinantes sociales.", "El desarrollo de la vigilancia epidemiológica."], correcta: 1 },
+                    { pregunta: "Durante la primera mitad del siglo XX, ¿qué avances permitieron controlar muchas enfermedades infecciosas?", opciones: ["La mejora de la dieta inadecuada y la lucha contra la obesidad.", "La consolidación de la vacunación y el uso de antibióticos.", "La identificación del ácido nicotínico como causa de la pelagra.", "La prohibición del tabaquismo en espacios públicos."], correcta: 1 },
+                    { pregunta: "En la segunda mitad del siglo XX, la epidemiología amplió su campo para analizar factores de riesgo como:", opciones: ["El sexo y la edad del individuo, únicamente.", "Factores sociales, ambientales y de estilo de vida.", "Únicamente la exposición a bacterias y virus.", "La fuerza de la asociación y la plausibilidad biológica."], correcta: 1 },
+                    { pregunta: "¿Qué enfermedad no transmisible se asocia con la exposición laboral al amianto, según los hallazgos del siglo XX?", opciones: ["Cáncer de pulmón.", "Hipertensión arterial.", "Mesotelioma pleural.", "Diabetes tipo 2."], correcta: 2 },
+                    { pregunta: "¿Qué enfermedades no transmisibles están asociadas al tabaquismo, según los ejemplos del siglo XX?", opciones: ["Infarto de miocardio y mesotelioma pleural.", "Cáncer de pulmón y EPOC.", "Diabetes tipo 2 y cardiopatía isquémica.", "Pelagra y raquitismo."], correcta: 1 },
+                    { pregunta: "¿Quién es considerado el padre de la epidemiología moderna?", opciones: ["Quinto Tiberio Angelerio.", "John Ryle.", "John Snow.", "Robert Koch."], correcta: 2 },
+                    { pregunta: "¿Cuál fue la enfermedad que estudió John Snow en Londres en 1854?", opciones: ["Viruela.", "Peste.", "Gripe.", "Cólera."], correcta: 3 },
+                    { pregunta: "¿Qué evento geográfico fue identificado por John Snow como la fuente común del brote de cólera en el barrio del Soho?", opciones: ["El alcantarillado general de la ciudad.", "Un mercado de mariscos contaminado.", "La bomba de agua del pozo de Broad Street.", "El hospital local donde se concentraban los enfermos."], correcta: 2 },
+                    { pregunta: "¿Qué acción recomendó John Snow que provocó el descenso inmediato de los casos de cólera?", opciones: ["La administración masiva de antibióticos.", "El aislamiento de todos los enfermos.", "Cerrar el pozo de Broad Street y mejorar el alcantarillado.", "La obligatoriedad de la vacunación."], correcta: 2 },
+                    { pregunta: "¿Cuál es la principal importancia del caso de John Snow respecto a la necesidad de conocer el agente causal de la enfermedad?", opciones: ["Demostró que era esencial conocer el Vibrio cholerae.", "Mostró que la epidemiología no necesita conocer el agente causal para ser eficaz.", "Sentó las bases de la microbiología moderna.", "Demostró la utilidad de la evidencia experimental en humanos."], correcta: 1 },
+                    { pregunta: "¿Cuál de los siguientes NO es una de las bases del método epidemiológico moderno sentadas por el trabajo de John Snow?", opciones: ["Observación de los hechos.", "Registro y tabulación de datos.", "Estudio de la plausibilidad biológica.", "Intervención para el control de la enfermedad."], correcta: 2 },
+                    { pregunta: "Además del descubrimiento de nuevos factores de riesgo, ¿qué otro factor contribuyó a la ampliación notable del concepto de epidemiología durante el siglo XX?", opciones: ["El reconocimiento de la influencia de los determinantes sociales, económicos y ambientales.", "La aparición del concepto de causa única.", "El abandono de la estadística como herramienta de análisis.", "El enfoque exclusivo en las enfermedades infecciosas."], correcta: 0 },
+                    { pregunta: "¿Alrededor de qué año se sitúan los inicios de la epidemiología moderna?", opciones: ["1598.", "1854.", "1943.", "2006."], correcta: 2 },
+                    { pregunta: "¿Quién fue John Ryle?", opciones: ["El padre de la epidemiología moderna.", "El primer profesor de medicina social.", "El autor del Tratado sobre las epidemias de peste.", "El investigador que aisló la vitamina B3."], correcta: 1 },
+                    { pregunta: "¿Cuáles fueron las dos contribuciones principales de John Ryle a la epidemiología?", opciones: ["Demostrar la transmisión del cólera por agua.", "Aconsejar el aislamiento y la cuarentena.", "Destacar la importancia de factores sociales e introducir sistemáticamente la estadística.", "Proponer los criterios de causalidad de Hill."], correcta: 2 },
+                    { pregunta: "A partir de la segunda mitad del siglo XX, ¿qué tipo de enfermedades superaron en prevalencia a las infecciosas en los países desarrollados?", opciones: ["Enfermedades tropicales.", "Enfermedades relacionadas con la genética pura.", "Enfermedades no transmisibles (crónicas, cáncer, cardiovasculares).", "Enfermedades de declaración obligatoria (EDOs)."], correcta: 2 },
+                    { pregunta: "¿Qué ciencia apoya a la epidemiología moderna para conocer la estructura y dinámica poblacional?", opciones: ["Sociología.", "Estadística.", "Demografía.", "Medicina clínica."], correcta: 2 },
+                    { pregunta: "¿Qué ciencia apoya a la epidemiología moderna para estudiar los determinantes sociales de la salud?", opciones: ["Demografía.", "Medicina preventiva.", "Sociología.", "Ciencias ambientales."], correcta: 2 },
+                    { pregunta: "Según la OMS (2006), la epidemiología es el estudio de la:", opciones: ["Causa única y la intervención.", "Secuencia temporal y la evidencia experimental.", "Distribución y los determinantes de los estados relacionados con la salud.", "Prevalencia y la incidencia solamente."], correcta: 2 },
+                    { pregunta: "Según Last (2001), ¿cuál es la finalidad de aplicar el estudio epidemiológico?", opciones: ["Para generar hipótesis descriptivas.", "Para obtener información individualizada.", "Para controlar los problemas de salud.", "Para identificar las asociaciones debidas al azar."], correcta: 2 },
+                    { pregunta: "¿Cuáles son los dos elementos principales que estudia la epidemiología, comunes en todas las definiciones?", opciones: ["La frecuencia de las enfermedades y la planificación sanitaria.", "La distribución de las enfermedades y los determinantes o factores de riesgo.", "La farmacovigilancia y la historia natural de la enfermedad.", "La salud mental y la salud laboral."], correcta: 1 },
+                    { pregunta: "¿Cuál es la doble finalidad de la epidemiología?", opciones: ["Estudiar la mortalidad y la morbilidad.", "Crear estudios descriptivos y analíticos.", "Comprender la aparición de enfermedades y aplicar ese conocimiento para prevenir y controlar.", "Tabular datos y comprobar la hipótesis."], correcta: 2 },
+                    { pregunta: "Actualmente, la epidemiología se describe como una ciencia descriptiva y analítica orientada a la:", opciones: ["Microbiología pura.", "Evaluación de la terapia génica.", "Prevención y promoción de la salud.", "Identificación de la causa única."], correcta: 2 },
+                    { pregunta: "¿Cuál es el objetivo central de la epidemiología?", opciones: ["Dirigir recursos hacia enfermedades sin prevención eficaz.", "Mejorar la salud de la población mediante el estudio de la distribución de la enfermedad y sus determinantes.", "Demostrar la especificidad de la asociación entre factor y enfermedad.", "Aislar el agente causal en el laboratorio."], correcta: 1 },
+                    { pregunta: "¿Cuál de las siguientes NO es una función práctica de la epidemiología?", opciones: ["Evaluar métodos de tratamiento.", "Planificar y evaluar las intervenciones sanitarias.", "Conocer la historia natural de la enfermedad.", "Inventar nuevos fármacos antibióticos."], correcta: 3 },
+                    { pregunta: "Para diagnosticar el nivel de salud o enfermedad, ¿a cuál de estas preguntas responde la epidemiología?", opciones: ["¿Cuánto dura la latencia de la enfermedad?.", "¿Quiénes están enfermos? (edad, sexo, ocupación, etc.).", "¿Se cumple el gradiente biológico?.", "¿La asociación es estadísticamente significativa?."], correcta: 1 },
+                    { pregunta: "¿Cuál es una ventaja principal de la vigilancia epidemiológica ante emergencias sanitarias?", opciones: ["Permite establecer la plausibilidad biológica.", "Permite actuar de forma inmediata y evitar brotes incontrolados.", "Permite identificar la causa única del problema.", "Permite realizar exclusivamente estudios descriptivos."], correcta: 1 },
+                    { pregunta: "¿Qué dos entidades son responsables de la vigilancia epidemiológica en España?", opciones: ["La AEMPS y la OMS.", "El CDC y el ISCIII.", "El Instituto de Salud Carlos III (ISCIII) y el Ministerio de Sanidad.", "Las Comunidades Autónomas y las Universidades."], correcta: 2 },
+                    { pregunta: "¿Qué informe periódico elaboran las entidades responsables de la vigilancia epidemiológica en España?", opciones: ["El Diccionario de Epidemiología (Last, 2001).", "El Tratado sobre las epidemias de peste.", "El Boletín Epidemiológico Nacional.", "La base de datos FEDRA."], correcta: 2 },
+                    { pregunta: "¿Cómo se denomina el campo de la epidemiología que estudia el consumo de fármacos en la población y detecta reacciones adversas a medicamentos (RAM)?", opciones: ["Vigilancia sanitaria.", "Farmacovigilancia.", "Farmacología clínica.", "Biología molecular."], correcta: 1 },
+                    { pregunta: "¿Cuál es la base de datos utilizada en España para coordinar la recogida de sospechas de Reacciones Adversas a Medicamentos (RAM)?", opciones: ["La base de datos SEFV-H.", "La base de datos FEDRA.", "El Boletín Epidemiológico Nacional.", "La base de datos del CDC."], correcta: 1 },
+                    { pregunta: "¿Qué agencia española dirige el Sistema Español de Farmacovigilancia de Medicamentos de Uso Humano (SEFV-H)?", opciones: ["El Instituto de Salud Carlos III (ISCIII).", "La Organización Mundial de la Salud (OMS).", "La Agencia Española de Medicamentos y Productos Sanitarios (AEMPS).", "El Ministerio de Sanidad."], correcta: 2 },
+                    { pregunta: "¿Qué describe la historia natural de la enfermedad?", opciones: ["La evolución de una enfermedad desde la exposición a factores de riesgo hasta su desenlace (curación, cronicidad o muerte).", "La distribución geográfica de una patología.", "Únicamente la fase de síntomas agudos de una enfermedad.", "La secuencia temporal que debe seguir un estudio experimental."], correcta: 0 },
+                    { pregunta: "¿Cómo se define un factor de riesgo en epidemiología?", opciones: ["Circunstancia que disminuye la probabilidad de enfermedad.", "Circunstancia que aumenta la probabilidad de enfermedad.", "El agente causal aislado.", "Un estudio observacional descriptivo."], correcta: 1 },
+                    { pregunta: "¿Cómo se define un factor protector?", opciones: ["Un factor que aumenta la probabilidad de enfermedad.", "Un factor que disminuye la probabilidad de enfermedad.", "Un marcador genético individual.", "El resultado de un ensayo clínico."], correcta: 1 },
+                    { pregunta: "En la epidemiología moderna, ¿qué dos conceptos han sustituido al de \"causa única\"?", opciones: ["Fuerza de la asociación y consistencia.", "Red causal o causalidad probabilística.", "Secuencia temporal y plausibilidad biológica.", "Vigilancia epidemiológica y farmacovigilancia."], correcta: 1 },
+                    { pregunta: "¿A qué se refiere la causalidad en epidemiología?", opciones: ["Al estudio de la relación etiológica entre una exposición/factor de riesgo y un efecto/enfermedad.", "A la obligación de realizar ensayos clínicos aleatorizados.", "A la descripción de la distribución de la enfermedad por edad y sexo.", "Al proceso de tabulación de datos en mapas."], correcta: 0 },
+                    { pregunta: "¿Cuál es el objetivo de los estudios epidemiológicos en el contexto de las asociaciones?", opciones: ["Medir la prevalencia de la enfermedad.", "Distinguir asociaciones reales de las aparentes (azar).", "Describir la historia natural de la enfermedad.", "Formular la ley epidemiológica."], correcta: 1 },
+                    { pregunta: "¿Cuáles son los dos pasos principales para establecer la causalidad en epidemiología?", opciones: ["Observación del fenómeno y tabulación de datos.", "Formulación de la ley y aplicación de medidas preventivas.", "Lograr una asociación estadísticamente significativa y aplicar criterios de causalidad.", "Analizar solo factores genéticos y variables individuales."], correcta: 2 },
+                    { pregunta: "¿Qué criterios de causalidad son los más aceptados, propuestos en 1965?", opciones: ["Los criterios de John Snow.", "Los criterios de Joseph Goldberger.", "Los criterios de Austin Bradford Hill.", "Los criterios de la OMS (2006)."], correcta: 2 },
+                    { pregunta: "¿Cómo se mide la Fuerza de la asociación según los criterios de Bradford Hill?", opciones: ["Midiendo la proporción de casos por sexo y edad.", "Comparando la frecuencia de la enfermedad en expuestos versus no expuestos (ej. OR o RR elevados).", "Demostrando que un factor causa una sola enfermedad.", "Verificando que la asociación es compatible con la medicina clínica."], correcta: 1 },
+                    { pregunta: "¿Cuál es un ejemplo de fuerza de la asociación que se relaciona con el tabaquismo y el cáncer de pulmón, según las fuentes?", opciones: ["El riesgo en fumadores es 20 veces mayor que en no fumadores (RR ≈ 20).", "La exposición debe ocurrir antes de la enfermedad.", "La asociación debe ser consistente en diferentes estudios.", "El humo del tabaco contiene sustancias carcinógenas que dañan el ADN."], correcta: 0 },
+                    { pregunta: "Según el criterio de Secuencia temporal, ¿qué debe ocurrir antes de la enfermedad?", opciones: ["La consistencia de los estudios.", "La aplicación de la evidencia experimental.", "La exposición al factor de riesgo o factor protector.", "El aislamiento del agente causal."], correcta: 2 },
+                    { pregunta: "¿Qué implica la Consistencia de la asociación?", opciones: ["Que el factor de riesgo solo produce una enfermedad.", "Que la asociación debe repetirse en diferentes estudios, poblaciones, lugares y momentos.", "Que a mayor exposición, menor riesgo de enfermedad.", "Que la asociación debe ser compatible con los conocimientos de la época."], correcta: 1 },
+                    { pregunta: "¿Por qué el criterio de Especificidad de la asociación es poco frecuente en la epidemiología moderna?", opciones: ["Porque la causalidad debe evaluarse como un conjunto de evidencias.", "Porque la mayoría de enfermedades son multicausales.", "Porque la experimentación en humanos no es ética.", "Porque es imposible medir la fuerza de la asociación."], correcta: 1 },
+                    { pregunta: "¿Qué establece el Gradiente biológico o efecto dosis–respuesta?", opciones: ["Que la asociación es exclusiva de un único agente.", "Que la asociación debe ser compatible con la biología celular.", "Que a mayor exposición, mayor riesgo de enfermedad.", "Que la exposición ocurrió antes del diagnóstico."], correcta: 2 },
+                    { pregunta: "¿Qué requiere el criterio de Plausibilidad biológica?", opciones: ["Que la asociación sea compatible con los conocimientos científicos existentes.", "Que el riesgo relativo sea igual a 20.", "Que la exposición al factor sea de latencia larga.", "Que la enfermedad se repita en todas las poblaciones (consistencia)."], correcta: 0 },
+                    { pregunta: "¿Qué limitación ética o práctica existe a menudo para aplicar el criterio de Evidencia experimental en humanos?", opciones: ["Es muy costoso realizar estudios experimentales.", "No siempre es ético ni posible inducir la enfermedad en humanos.", "La secuencia temporal se pierde en la experimentación.", "Los resultados experimentales nunca cumplen la consistencia."], correcta: 1 },
+                    { pregunta: "¿Qué afirmó Hill sobre si alguno de sus criterios podía dar evidencia irrebatible de causalidad?", opciones: ["Que la Evidencia experimental es siempre suficiente.", "Que la Plausibilidad biológica es la única condición sine qua non.", "Que ninguno de sus criterios puede dar evidencia irrebatible de causalidad ni ser requerido como condición sine qua non.", "Que solo la Fuerza de la asociación es obligatoria."], correcta: 2 },
+                    { pregunta: "¿Qué relación causal se considera un ejemplo paradigmático de cómo la epidemiología establece causalidad con gran impacto en la salud pública?", opciones: ["Déficit de vitamina D y raquitismo.", "Exposición laboral al amianto y mesotelioma.", "La relación entre el tabaquismo y el cáncer de pulmón.", "La transmisión del cólera por el agua."], correcta: 2 },
+                    { pregunta: "¿Qué busca el método epidemiológico?", opciones: ["Identificar la causa única de las enfermedades.", "Describir, analizar y explicar cómo se distribuyen las enfermedades y qué factores están implicados.", "Realizar ensayos clínicos aleatorizados en poblaciones específicas.", "Analizar únicamente la mortalidad y morbilidad."], correcta: 1 },
+                    { pregunta: "¿Cuál de las siguientes opciones describe el orden correcto de las fases del método epidemiológico?", opciones: ["Tabulación, Observación, Comprobación, Hipótesis, Informe.", "Observación, Tabulación, Elaboración de hipótesis, Comprobación de la hipótesis, Informe y formulación de la ley.", "Observación, Secuencia temporal, Consistencia, Plausibilidad, Informe.", "Diagnóstico, Planificación, Evaluación, Identificación de riesgos."], correcta: 1 },
+                    { pregunta: "En la fase de Observación del fenómeno, ¿qué conjunto de variables se recogen?", opciones: ["Riesgo relativo, odds ratio y razón de prevalencia.", "Edad, sexo, y nivel socioeconómico.", "Persona, Lugar y Tiempo.", "Asociación, Causalidad y Experimentación."], correcta: 2 },
+                    { pregunta: "En la fase de Tabulación de datos, además de ordenar los datos en tablas, ¿cómo deben ser representados gráficamente?", opciones: ["Mediante encuestas de casos y controles.", "Mediante el uso de mapas, histogramas o curvas epidémicas.", "Mediante el cumplimiento de los criterios de Hill.", "Únicamente mediante la elaboración de una revisión bibliográfica."], correcta: 1 },
+                    { pregunta: "Si un estudio se detiene en la fase de Elaboración de la hipótesis, ¿qué tipo de estudio es?", opciones: ["Un estudio experimental.", "Un estudio analítico.", "Un estudio descriptivo.", "Un ensayo clínico aleatorizado."], correcta: 2 },
+                    { pregunta: "¿Qué tipos de estudios se realizan en la fase de Comprobación de la hipótesis, especialmente cuando la experimentación no es ética?", opciones: ["Estudios de casos clínicos y estudios ecológicos.", "Estudios experimentales y estudios observacionales no experimentales (casos y controles, cohortes).", "Estudios de mortalidad y morbilidad.", "Estudios de prevalencia y estudios descriptivos."], correcta: 1 },
+                    { pregunta: "Los estudios que llegan a la fase de Informe y formulación de la ley al establecer vínculos causales son:", opciones: ["Únicamente los estudios descriptivos.", "Los estudios observacionales sin seguimiento.", "Los estudios analíticos.", "Los estudios basados en la creencia inicial sobre la enfermedad."], correcta: 2 },
+                    { pregunta: "En la investigación de Joseph Goldberger sobre la pelagra, ¿cuál era la creencia inicial sobre la causa de la enfermedad?", opciones: ["Se creía que era una deficiencia nutricional.", "Se creía que era una enfermedad infecciosa (un germen).", "Se creía que era causada por el consumo de tabaco.", "Se creía que estaba relacionada con la exposición al amianto."], correcta: 1 },
+                    { pregunta: "¿Cuál fue la hipótesis de Joseph Goldberger sobre la causa de la pelagra?", opciones: ["Que la causa era un germen infeccioso en el agua.", "Que la causa era una deficiencia nutricional en la dieta.", "Que la causa era la exposición a radiaciones solares excesivas.", "Que era una enfermedad relacionada con el envejecimiento."], correcta: 1 },
+                    { pregunta: "¿Qué nutriente específico (vitamina B3) fue aislado en 1937 como la causa del déficit que provoca la pelagra?", opciones: ["Vitamina D.", "Proteínas.", "El ácido nicotínico (niacina).", "El Vibrio cholerae."], correcta: 2 },
+                    { pregunta: "En el caso de COVID-19 en Wuhan, ¿cuáles fueron variables observadas para Persona y Lugar?", opciones: ["Persona: Adultos con enfermedades previas; Lugar: Mercado de mariscos de Wuhan.", "Persona: Mayores y con comorbilidades; Lugar: Expansión global.", "Persona: Trabajadores de la salud; Lugar: El pozo de Broad Street.", "Persona: Fumadores; Lugar: Comunidades autónomas."], correcta: 0 },
+                    { pregunta: "En el caso de COVID-19, la tabulación y descripción de datos mostró que la mortalidad era más alta en:", opciones: ["Personas sin enfermedades previas.", "Mayores y personas con comorbilidades.", "Niños pequeños (por bronquiolitis).", "Viajeros internacionales exclusivamente."], correcta: 1 },
+                    { pregunta: "¿Qué demostraron los ensayos clínicos que se llevaron a cabo durante la fase de Comprobación de la hipótesis en la pandemia de COVID-19?", opciones: ["Que el virus se transmitía exclusivamente por mercados húmedos.", "Que la enfermedad se curaba con una dieta rica en proteínas.", "La eficacia de las vacunas (Pfizer, Moderna, AstraZeneca).", "Que el agente causal era un virus desconocido en la época."], correcta: 2 },
+                    { pregunta: "¿Cuáles son dos criterios en los que varían los diferentes modelos de estudios epidemiológicos?", opciones: ["Latencia larga y multicausalidad.", "Complejidad y nivel de control del investigador.", "Cobertura de vacunación y tasas de incidencia.", "Secuencia temporal y consistencia."], correcta: 1 },
+                    { pregunta: "¿Cómo se clasifican los Estudios de mortalidad y morbilidad y los Ensayos clínicos aleatorizados (ECA) según su complejidad?", opciones: ["Ambos son complejos.", "Mortalidad/morbilidad es sencillo; ECA es complejo.", "Ambos son sencillos.", "Mortalidad/morbilidad es complejo; ECA es sencillo."], correcta: 1 },
+                    { pregunta: "¿Cuál es la diferencia fundamental entre los estudios observacionales y experimentales en cuanto al rol del investigador?", opciones: ["En los observacionales el investigador interviene; en los experimentales solo registra.", "En los observacionales el investigador solo registra; en los experimentales interviene y controla las condiciones.", "Los observacionales buscan causas; los experimentales solo describen.", "Los observacionales son longitudinales; los experimentales son transversales."], correcta: 1 },
+                    { pregunta: "¿Cuál es el objetivo principal de los Estudios descriptivos?", opciones: ["Comprobar si existe asociación entre un factor de riesgo y una enfermedad.", "Describir la distribución de una enfermedad en una población (cuándo, dónde y a quién afecta).", "Formular una ley epidemiológica.", "Manipular las condiciones para comprobar una hipótesis."], correcta: 1 },
+                    { pregunta: "Según el criterio de control del investigador, ¿qué tipo de estudios son siempre los descriptivos?", opciones: ["Analíticos.", "Longitudinales.", "Experimentales.", "Observacionales."], correcta: 3 },
+                    { pregunta: "Un estudio analítico requiere:", opciones: ["Información grupal (ecológica) únicamente.", "Información individualizada de exposición y enfermedad.", "Únicamente la tabulación de casos por área geográfica.", "Unicamente la formulación de una hipótesis descriptiva."], correcta: 1 },
+                    { pregunta: "¿Cuáles son ejemplos de Estudios Observacionales Descriptivos?", opciones: ["Ensayos clínicos y ensayos comunitarios.", "Estudios de cohortes y casos y controles.", "Estudios de mortalidad/morbilidad y estudios transversales (prevalencia).", "Estudios que llegan a la formulación de la ley."], correcta: 2 },
+                    { pregunta: "¿Cuáles son ejemplos de Estudios Observacionales Analíticos?", opciones: ["Estudios de casos y controles y estudios de cohortes.", "Estudios ecológicos y casos clínicos.", "Estudios de mortalidad y ensayos clínicos.", "Curvas epidémicas y mapas de propagación."], correcta: 0 },
+                    { pregunta: "¿Cuáles son dos ejemplos de Estudios Experimentales (analíticos)?", opciones: ["Estudios transversales y estudios de mortalidad.", "Estudios de cohortes y estudios de prevalencia.", "Ensayos clínicos controlados y aleatorizados (ECA) y ensayos comunitarios.", "Estudios descriptivos y estudios de casos clínicos."], correcta: 2 }
                 ]
             };
 
-            // Evento para comenzar el test
-            $('#startQuiz').click(function () {
-                const examenSeleccionado = $('#examSelector').val(); // Obtener el examen seleccionado
-                preguntas = examenes[examenSeleccionado]; // Cargar las preguntas del examen seleccionado
-                if (preguntas.length > 0) {
-                    preguntas.sort(() => Math.random() - 0.5); // Aleatorizar el orden
-                    preguntaActual = 0;
-                    correctas = 0;
-                    mostrarPregunta(preguntaActual); // Mostrar la primera pregunta
-                    actualizarProgreso();
+
+            // Función para iniciar el test
+            function iniciarTest() {
+                const selectedExam = $('#examSelector').val();
+                if (!examenes[selectedExam]) {
+                    $('#questions').html('<p style="color: red; text-align: center;">Error: Examen no encontrado.</p>');
+                    return;
                 }
-            });
 
-            // Función para mostrar una pregunta en el DOM
+                // Reiniciar variables
+                preguntaActual = 0;
+                correctas = 0;
+                
+                // Cargar las preguntas del examen seleccionado
+                preguntas = examenes[selectedExam];
+
+                // Barajar las preguntas para un orden aleatorio
+                preguntas = shuffleArray([...preguntas]); // Usar la copia barajada
+                
+                $('#result').empty(); // Limpiar el resultado anterior
+                $('#quizForm').show();
+                mostrarPregunta(preguntaActual);
+                actualizarProgreso();
+            }
+
+            // Función para mostrar una pregunta específica
             function mostrarPregunta(index) {
-                const pregunta = preguntas[index];
-                const opcionesHTML = pregunta.opciones.map((opcion, i) => `
-                    <label>
-                        <input type="radio" name="question${index}" value="${i}">
-                        ${opcion}
-                    </label>
-                `).join('');
-                $('#questions').html(`
-                    <div class="question-container">
-                        <p><strong>${index + 1}. ${pregunta.pregunta}</strong></p>
-                        ${opcionesHTML}
-                        <span class="feedback" id="feedback${index}"></span>
-                        <button id="nextQuestion" style="display:none;">Siguiente pregunta</button>
+                const qData = preguntas[index];
+                let optionsHtml = '';
+                const questionIndex = index + 1;
+                const totalQuestions = preguntas.length;
+
+                // Crear un array de opciones y su índice de respuesta original
+                const originalOptions = qData.opciones.map((text, i) => ({ text, originalIndex: i }));
+                
+                // Barajar solo las opciones para esta visualización (Fisher-Yates)
+                const shuffledOptions = shuffleArray([...originalOptions]);
+                
+                // Determinar el nuevo índice de la respuesta correcta dentro de las opciones barajadas
+                const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === qData.correcta);
+
+                // Guardar las opciones barajadas y el nuevo índice correcto para la verificación
+                preguntas[index].shuffledOptions = shuffledOptions;
+                preguntas[index].newCorrecta = newCorrectIndex;
+                
+                // Generar el HTML de las opciones
+                shuffledOptions.forEach((option, i) => {
+                    optionsHtml += `
+                        <label>
+                            <input type="radio" name="question${questionIndex}" value="${i}" data-original-index="${option.originalIndex}" data-new-index="${i}">
+                            ${String.fromCharCode(65 + i)}. ${option.text}
+                        </label>
+                    `;
+                });
+
+                const questionHtml = `
+                    <div class="question-container" data-question-index="${index}">
+                        <p><strong>Pregunta ${questionIndex} de ${totalQuestions}:</strong> ${qData.pregunta}</p>
+                        <div class="options">${optionsHtml}</div>
+                        <span class="feedback" id="feedback${questionIndex}"></span>
+                        <button class="checkAnswer" data-question-index="${index}" style="margin-top: 15px;">Comprobar Respuesta</button>
                     </div>
-                `);
+                `;
 
-                // Detectar cuando el usuario selecciona una opción
-                $('input[name="question' + index + '"]').change(function () {
-                    const seleccionada = $(this).val();
-                    const feedback = $('#feedback' + index);
+                $('#questions').html(questionHtml);
 
-                    // Remover estilos previos
-                    $('label').removeClass('correcto incorrecto');
-                    if (seleccionada == pregunta.correcta) {
-                        correctas++;
-                        feedback.html('<span class="correct">✔ Correcto</span>');
-                        $(this).closest('label').addClass('correcto'); // Añadir clase para correcta
-                    } else {
-                        feedback.html('<span class="incorrect">✘ Incorrecto</span>');
-                        $(this).closest('label').addClass('incorrecto'); // Añadir clase para incorrecta
+                // Evento para comprobar la respuesta
+                $('.checkAnswer').click(function (e) {
+                    e.preventDefault();
+                    const qIndex = $(this).data('question-index');
+                    const selectedValue = $(`input[name="question${qIndex + 1}"]:checked`).val();
+                    const newCorrectIndex = preguntas[qIndex].newCorrecta;
+                    const feedbackElement = $(`#feedback${qIndex + 1}`);
+                    const optionsContainer = $(this).closest('.question-container').find('.options');
+                    
+                    if (selectedValue === undefined) {
+                        feedbackElement.text('Por favor, selecciona una opción.').removeClass('correct incorrect').css('color', 'orange');
+                        return;
                     }
 
-                    // Mostrar el botón para la siguiente pregunta
-                    $('#nextQuestion').show();
+                    $(this).prop('disabled', true); // Deshabilitar el botón de comprobación
+
+                    // Obtener todas las etiquetas (labels)
+                    const labels = optionsContainer.find('label');
+                    
+                    // Comprobar si es correcta
+                    if (parseInt(selectedValue) === newCorrectIndex) {
+                        correctas++;
+                        feedbackElement.text('¡Correcto!').removeClass('incorrect').addClass('correct');
+                        labels.eq(selectedValue).addClass('correcto'); // Resaltar la seleccionada correctamente
+                    } else {
+                        feedbackElement.text('Incorrecto.').removeClass('correct').addClass('incorrect');
+                        labels.eq(selectedValue).addClass('incorrecto'); // Resaltar la seleccionada incorrectamente
+                        labels.eq(newCorrectIndex).addClass('resaltar-correcta'); // Resaltar la respuesta correcta
+                    }
+                    
+                    // Deshabilitar todas las opciones
+                    optionsContainer.find('input[type="radio"]').prop('disabled', true);
+                    
+                    // Mostrar botón para siguiente pregunta o finalizar
+                    if (qIndex < preguntas.length - 1) {
+                        $('#questions').append('<button id="nextQuestion" style="margin-top: 20px;">Siguiente pregunta</button>');
+                    } else {
+                        $('#questions').append('<button id="finishQuiz" style="margin-top: 20px;">Finalizar Test</button>');
+                        $('#finishQuiz').click(mostrarResultadoFinal);
+                    }
                 });
 
                 // Avanzar a la siguiente pregunta al hacer clic en "Siguiente pregunta"
-                $('#nextQuestion').click(function () {
+                $(document).off('click', '#nextQuestion').on('click', '#nextQuestion', function (e) {
+                    e.preventDefault();
                     preguntaActual++;
-                    if (preguntaActual < preguntas.length) {
-                        mostrarPregunta(preguntaActual);
-                        actualizarProgreso();
-                    } else {
-                        mostrarResultadoFinal();
-                    }
+                    mostrarPregunta(preguntaActual);
+                    actualizarProgreso();
                 });
             }
 
@@ -1277,7 +585,7 @@
             function actualizarProgreso() {
                 const porcentaje = ((preguntaActual + 1) / preguntas.length) * 100;
                 $('#progress').css('width', porcentaje + '%');
-                $('#progressPercentage').text(Math.round(porcentaje) + '%');
+                $('#progressPercentage').text(`${preguntaActual + 1}/${preguntas.length} (${Math.round(porcentaje)}%)`);
             }
 
             // Mostrar el resultado final al finalizar todas las preguntas
@@ -1285,12 +593,23 @@
                 const totalPreguntas = preguntas.length;
                 const nota = (correctas / totalPreguntas) * 10;
                 $('#questions').html(`
-                    <h2>Has completado el test</h2>
-                    <p>Tu puntuación final es: ${nota.toFixed(2)} / 10</p>
+                    <h2>Has completado el test (${totalPreguntas} preguntas)</h2>
+                    <p>Respuestas correctas: <strong>${correctas}</strong></p>
+                    <p>Respuestas incorrectas: <strong>${totalPreguntas - correctas}</strong></p>
+                    <p>Tu puntuación final es: <strong>${nota.toFixed(2)} / 10</strong></p>
+                    <button id="restartQuiz">Volver a Empezar</button>
                 `);
                 $('#progress').css('width', '100%');
-                $('#progressPercentage').text('100%');
+                $('#progressPercentage').text(`FIN (${totalPreguntas}/${totalPreguntas})`);
+                
+                $('#restartQuiz').click(iniciarTest);
             }
+
+            // Evento para empezar el test
+            $('#startQuiz').click(iniciarTest);
+            
+            // Iniciar el test automáticamente con el examen seleccionado al cargar la página (opcional)
+            // iniciarTest();
         });
     </script>
 </body>
